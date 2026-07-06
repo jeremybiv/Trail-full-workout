@@ -1,22 +1,8 @@
+import { useEffect, useRef } from 'react';
+import Lottie from 'lottie-react';
+import type { LottieRefCurrentProps } from 'lottie-react';
 import type { MotionType } from '../data/exercises';
-
-const FIG = (
-  <g className="fig">
-    <g className="upper">
-      <circle className="fl" cx="50" cy="18" r="3" strokeWidth="7" />
-      <line className="fl" x1="50" y1="25" x2="50" y2="55" />
-      <g className="arms">
-        <line className="fl" x1="50" y1="32" x2="32" y2="48" />
-        <line className="fl" x1="50" y1="32" x2="68" y2="48" />
-      </g>
-    </g>
-    <g className="legs">
-      <line className="fl" x1="50" y1="55" x2="36" y2="82" />
-      <line className="fl" x1="50" y1="55" x2="64" y2="82" />
-    </g>
-    <ellipse className="heel" cx="50" cy="86" rx="9" ry="2.6" />
-  </g>
-);
+import { getAnimation } from '../animations/data';
 
 interface Props {
   motionType: MotionType;
@@ -25,14 +11,24 @@ interface Props {
 }
 
 export function ExerciseSvg({ motionType, variant, paused }: Props) {
-  const cls =
-    variant === 'card'
-      ? `anim ${motionType}`
-      : [`psvg`, motionType, paused ? 'paused' : ''].filter(Boolean).join(' ');
+  const lottieRef = useRef<LottieRefCurrentProps | null>(null);
+  const animData = getAnimation(motionType);
+  const size = variant === 'card' ? 50 : 100;
+
+  useEffect(() => {
+    if (!lottieRef.current) return;
+    if (paused) lottieRef.current.pause();
+    else lottieRef.current.play();
+  }, [paused]);
 
   return (
-    <svg className={cls} viewBox="0 0 100 100" overflow="visible">
-      {FIG}
-    </svg>
+    <Lottie
+      lottieRef={lottieRef}
+      animationData={animData}
+      loop
+      autoplay={!paused}
+      style={{ width: size, height: size, flexShrink: 0 }}
+      rendererSettings={{ preserveAspectRatio: 'xMidYMid meet' }}
+    />
   );
 }

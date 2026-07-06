@@ -1,11 +1,12 @@
 import type { Exercise } from '../data/exercises';
 import { gifCache } from '../lib/gif';
+import { ExerciseSvg } from './ExerciseSvg';
 
 interface Props {
   exercise: Exercise;
   index: number;
   isLeg: boolean;
-  gifVersion: number; // bumped externally to trigger re-read of gifCache
+  gifVersion: number;
 }
 
 export function ExerciseCard({ exercise, index, isLeg, gifVersion: _ }: Props) {
@@ -14,11 +15,11 @@ export function ExerciseCard({ exercise, index, isLeg, gifVersion: _ }: Props) {
   return (
     <div className={`ex-card${isLeg ? ' leg' : ''}`}>
       <span className="ex-idx">{index + 1}</span>
-      <div className="media-wrap" id={`gs-${exercise.id}`}>
+      <div className="media-wrap">
         {gifUrl ? (
           <img src={gifUrl} alt="" loading="lazy" />
         ) : (
-          <div className="shim" />
+          <ExerciseSvg motionType={exercise.m} variant="card" />
         )}
       </div>
       <div className="ex-info">
