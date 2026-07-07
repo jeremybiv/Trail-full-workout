@@ -10,6 +10,9 @@
   --blaze: #e8742c;
   --gold: #cf9f3a;
   --rest: #5b9279;
+  --glow-work: rgba(232, 116, 44, 0.10);
+  --glow-rest: rgba(91, 146, 121, 0.10);
+  --glow-gap:  rgba(207, 159, 58, 0.10);
 }
 
 *, *::before, *::after {
@@ -68,34 +71,48 @@ button {
 }
 
 .route {
-  font-size: 34px;
+  font-size: 42px;
   line-height: 1;
   margin: 0;
   font-family: 'Bebas Neue', sans-serif;
   letter-spacing: 0.04em;
 }
 
-.section-row {
+.hdr-row {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
-  margin: 0 0 10px;
+  gap: 8px;
 }
 
-.section-title {
-  font-size: 12px;
+.workout-meta {
+  display: flex;
+  gap: 6px;
+  margin: 0 0 16px;
+  flex-wrap: wrap;
+}
+
+.meta-pill {
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.10em;
   color: var(--dim);
-  margin: 0;
+  background: var(--surf);
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  padding: 4px 10px;
 }
 
 .regen-btn {
-  font-size: 12px;
+  font-size: 20px;
   color: var(--blaze);
-  font-weight: 700;
-  padding: 4px 0;
+  padding: 4px;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .ex-list {
@@ -105,6 +122,18 @@ button {
   margin-bottom: 24px;
 }
 
+.cat-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+  background: var(--dim);
+}
+
+.ex-card.leg .cat-dot {
+  background: var(--blaze);
+}
+
 .ex-card {
   display: flex;
   align-items: center;
@@ -112,7 +141,7 @@ button {
   background: var(--surf);
   border: 1px solid var(--line);
   border-radius: 12px;
-  padding: 8px 12px 8px 8px;
+  padding: 8px 12px 8px 10px;
 }
 
 .ex-card.leg {
@@ -196,15 +225,6 @@ button {
   color: var(--blaze);
 }
 
-.ex-idx {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  color: var(--dim);
-  flex: none;
-  width: 18px;
-  text-align: right;
-}
-
 .start-btn {
   width: 100%;
   padding: 18px;
@@ -239,6 +259,19 @@ button {
   flex-direction: column;
   align-items: center;
   padding: 16px 16px max(16px, env(safe-area-inset-bottom));
+  transition: background 0.4s ease;
+}
+
+.player.phase-work {
+  background: radial-gradient(ellipse 80% 35% at 50% 0%, var(--glow-work), transparent 70%), #141c17;
+}
+
+.player.phase-rest {
+  background: radial-gradient(ellipse 80% 35% at 50% 0%, var(--glow-rest), transparent 70%), #141c17;
+}
+
+.player.phase-gap {
+  background: radial-gradient(ellipse 80% 35% at 50% 0%, var(--glow-gap), transparent 70%), #141c17;
 }
 
 .player.open {
@@ -285,6 +318,29 @@ button {
   justify-content: flex-end;
 }
 
+/* progress dots */
+.prog-dots {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 12px;
+}
+
+.pdot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--line);
+  transition: background 0.3s;
+}
+
+.pdot.done {
+  background: var(--dim);
+}
+
+.pdot.active.work { background: var(--blaze); }
+.pdot.active.rest { background: var(--rest); }
+.pdot.active.prep { background: var(--gold); }
+
 /* progress bar */
 .prog-bar {
   width: 100%;
@@ -307,19 +363,21 @@ button {
 .phase-lbl {
   font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.14em;
   font-weight: 700;
-  margin: 0 0 8px;
+  margin: 0 0 10px;
+  padding: 5px 16px;
+  border-radius: 99px;
 }
 
-.phase-lbl.work { color: var(--blaze); }
-.phase-lbl.rest { color: var(--rest); }
-.phase-lbl.prep { color: var(--gold); }
+.phase-lbl.work { color: #1c1208; background: var(--blaze); }
+.phase-lbl.rest { color: #0d1f18; background: var(--rest); }
+.phase-lbl.prep { color: #1c1208; background: var(--gold); }
 
 /* player media circle */
 .pmedia {
-  width: 164px;
-  height: 164px;
+  width: 200px;
+  height: 200px;
   border-radius: 50%;
   background: var(--surf);
   border: 2px solid var(--line);
@@ -360,7 +418,7 @@ button {
 
 .ex-title {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 30px;
+  font-size: 40px;
   letter-spacing: 0.03em;
   text-align: center;
   margin: 0 0 6px;
@@ -368,24 +426,65 @@ button {
 }
 
 .ex-desc {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--dim);
   text-align: center;
   max-width: 300px;
   margin: 0 0 8px;
   line-height: 1.4;
-  min-height: 32px;
+  min-height: 40px;
 }
+
+.player.phase-rest .ex-desc { font-size: 13px; }
+
+/* timer ring */
+.timer-ring-wrap {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 8px 0;
+  flex: none;
+}
+
+.timer-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: rotate(-90deg);
+}
+
+.ring-bg {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 4;
+}
+
+.ring-fill {
+  fill: none;
+  stroke-width: 4;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.35s linear;
+}
+
+.ring-fill.work { stroke: var(--blaze); }
+.ring-fill.rest { stroke: var(--rest); }
+.ring-fill.prep { stroke: var(--gold); }
 
 .timer {
   font-family: 'JetBrains Mono', monospace;
   font-weight: 700;
-  font-size: 72px;
+  font-size: 68px;
   line-height: 1;
   font-variant-numeric: tabular-nums;
-  margin: 0 0 6px;
+  margin: 0;
+  position: relative;
+  transition: opacity 0.2s;
 }
 
+.timer.paused { opacity: 0.55; }
 .timer.work { color: var(--blaze); }
 .timer.rest { color: var(--rest); }
 .timer.prep { color: var(--gold); }
@@ -396,9 +495,16 @@ button {
   text-align: center;
   min-height: 18px;
   margin: 0;
+  transition: font-size 0.2s, color 0.2s;
 }
 
 .next-lbl b { color: var(--ink); }
+
+.player.phase-rest .next-lbl {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+}
 
 .controls {
   display: flex;
@@ -462,11 +568,38 @@ button {
   letter-spacing: 0.03em;
 }
 
-.done p {
-  color: var(--dim);
-  font-size: 13px;
+.done-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 16px 0 28px;
+  width: 100%;
   max-width: 280px;
-  margin: 0 0 20px;
+}
+
+.stat-box {
+  background: var(--surf);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+
+.stat-val {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  line-height: 1;
+  color: var(--ink);
+  display: block;
+}
+
+.stat-lbl {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: var(--dim);
+  margin-top: 2px;
+  display: block;
 }
 
 .done .start-btn {

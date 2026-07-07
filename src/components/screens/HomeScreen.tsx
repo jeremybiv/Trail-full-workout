@@ -19,20 +19,23 @@ export function HomeScreen({ session, routeName, gifVersion, ready, onRegen, onS
     <div className="home">
       <div className="hdr">
         <p className="eyebrow">{dateLabel()}</p>
-        <h1 className="route">{routeName || 'Renfo du jour'}</h1>
+        <div className="hdr-row">
+          <h1 className="route">{routeName || 'Renfo du jour'}</h1>
+          <button className="regen-btn" onClick={onRegen} title="Changer les exercices">🎲</button>
+        </div>
       </div>
 
-      <div className="section-row">
-        <p className="section-title">8 exercices du jour</p>
-        <button className="regen-btn" onClick={onRegen}>🎲 Changer</button>
+      <div className="workout-meta">
+        <span className="meta-pill">~14 min</span>
+        <span className="meta-pill">2 rounds</span>
+        <span className="meta-pill">8 exercices</span>
       </div>
 
       <div className="ex-list">
-        {exercises.map((ex, i) => (
+        {exercises.map((ex) => (
           <ExerciseCard
             key={ex.id}
             exercise={ex}
-            index={i}
             isLeg={session ? session.legIds.includes(ex.id) : false}
             gifVersion={gifVersion}
           />

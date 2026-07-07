@@ -4,17 +4,16 @@ import { ExerciseSvg } from './ExerciseSvg';
 
 interface Props {
   exercise: Exercise;
-  index: number;
   isLeg: boolean;
   gifVersion: number;
 }
 
-export function ExerciseCard({ exercise, index, isLeg, gifVersion: _ }: Props) {
+export function ExerciseCard({ exercise, isLeg, gifVersion: _ }: Props) {
   const gifUrl = gifCache.get(exercise.id);
 
   return (
     <div className={`ex-card${isLeg ? ' leg' : ''}`}>
-      <span className="ex-idx">{index + 1}</span>
+      <span className="cat-dot" />
       <div className="media-wrap">
         {gifUrl ? (
           <img src={gifUrl} alt="" loading="lazy" />

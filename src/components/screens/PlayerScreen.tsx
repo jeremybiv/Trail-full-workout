@@ -12,6 +12,9 @@ interface Props {
   onDone: (elapsed: number) => void;
 }
 
+const RING_R = 70;
+const RING_CIRC = 2 * Math.PI * RING_R;
+
 export function PlayerScreen({ session, gifVersion, onQuit, onDone }: Props) {
   const [muted, setMuted] = useState(false);
   const timeline = useMemo(() => buildTimeline(session.ids), [session.ids]);
@@ -33,24 +36,35 @@ export function PlayerScreen({ session, gifVersion, onQuit, onDone }: Props) {
   const progressPct = totalDur > 0 ? Math.round((elapsed / totalDur) * 100) : 0;
   const nextName = step ? nextWorkName(timeline, stepIndex) : null;
 
+  const exDoneCount = useMemo(() => {
+    let count = 0;
+    for (let i = 0; i < stepIndex; i++) {
+      if (timeline[i]?.type === 'work') count++;
+    }
+    return count;
+  }, [timeline, stepIndex]);
+
   let phaseClass = 'phase-lbl';
   let timerClass = 'timer';
   let phaseText = '';
+  let phaseCls = 'phase-gap';
 
   if (step?.type === 'work') {
-    phaseClass += ' work'; timerClass += ' work'; phaseText = 'TRAVAIL';
+    phaseClass += ' work'; timerClass += ' work'; phaseText = 'TRAVAIL'; phaseCls = 'phase-work';
   } else if (step?.type === 'rest') {
-    phaseClass += ' rest'; timerClass += ' rest'; phaseText = 'RÉCUP';
+    phaseClass += ' rest'; timerClass += ' rest'; phaseText = 'RÉCUP'; phaseCls = 'phase-rest';
   } else {
-    phaseClass += ' prep'; timerClass += ' prep'; phaseText = 'PAUSE';
+    phaseClass += ' prep'; timerClass += ' prep'; phaseText = 'PAUSE'; phaseCls = 'phase-gap';
   }
 
   const roundLabel = step?.type === 'gap'
     ? 'Entre les rounds'
     : `Round ${step?.round ?? 1} / 2`;
 
+  const ringOffset = step ? RING_CIRC * (1 - rem / step.dur) : 0;
+
   return (
-    <div className="player open">
+    <div className={`player open ${phaseCls}`}>
       <div className="player-top">
         <button className="quit-btn" onClick={onQuit}>✕</button>
         <span className="round-pill">{roundLabel}</span>
@@ -64,6 +78,17 @@ export function PlayerScreen({ session, gifVersion, onQuit, onDone }: Props) {
 
       <div className="prog-bar">
         <div className="prog-fill" style={{ width: `${progressPct}%` }} />
+      </div>
+
+      <div className="prog-dots">
+        {session.ids.map((_, i) => {
+          const cls = i < exDoneCount
+            ? 'done'
+            : i === exDoneCount
+            ? `active ${step?.type ?? 'prep'}`
+            : '';
+          return <span key={i} className={`pdot${cls ? ' ' + cls : ''}`} />;
+        })}
       </div>
 
       <p className={phaseClass}>{phaseText}</p>
@@ -81,7 +106,20 @@ export function PlayerScreen({ session, gifVersion, onQuit, onDone }: Props) {
           : (exercise?.desc ?? '')}
       </p>
 
-      <div className={timerClass}>{rem}</div>
+      <div className="timer-ring-wrap">
+        <svg className="timer-ring" viewBox="0 0 160 160" width="160" height="160">
+          <circle className="ring-bg" cx="80" cy="80" r={RING_R} />
+          <circle
+            className={`ring-fill ${step?.type ?? 'prep'}`}
+            cx="80"
+            cy="80"
+            r={RING_R}
+            strokeDasharray={RING_CIRC}
+            strokeDashoffset={ringOffset}
+          />
+        </svg>
+        <div className={`${timerClass}${paused ? ' paused' : ''}`}>{rem}</div>
+      </div>
 
       <p className="next-lbl">
         {nextName ? (
