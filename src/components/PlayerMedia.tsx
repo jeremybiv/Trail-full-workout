@@ -1,15 +1,15 @@
 import type { Step } from '../lib/session';
 import { ALL } from '../data/exercises';
-import { gifCache } from '../lib/gif';
+import { PHOTO_EXERCISES } from '../data/exercisePhotos';
+import { ExercisePhoto } from './ExercisePhoto';
 import { ExerciseSvg } from './ExerciseSvg';
 
 interface Props {
   step: Step | null;
-  gifVersion: number;
   paused: boolean;
 }
 
-export function PlayerMedia({ step, gifVersion: _, paused }: Props) {
+export function PlayerMedia({ step, paused }: Props) {
   const isWork = step?.type === 'work';
   const isRest = step?.type === 'rest' || step?.type === 'gap';
   const exercise = step?.id ? ALL[step.id] : null;
@@ -18,13 +18,11 @@ export function PlayerMedia({ step, gifVersion: _, paused }: Props) {
   if (isWork) cls += ' work';
   else if (isRest) cls += ' rest';
 
-  const gifUrl = exercise ? gifCache.get(exercise.id) : null;
-
   return (
     <div className={cls}>
       {exercise ? (
-        gifUrl ? (
-          <img src={gifUrl} alt="" style={{ opacity: paused ? 0.4 : 1 }} />
+        PHOTO_EXERCISES.has(exercise.id) ? (
+          <ExercisePhoto id={exercise.id} paused={paused} />
         ) : (
           <ExerciseSvg motionType={exercise.m} variant="player" paused={paused} />
         )

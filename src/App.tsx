@@ -9,11 +9,9 @@ type View = 'home' | 'player' | 'done';
 
 export default function App() {
   const [view, setView] = useState<View>('home');
-  const [gifVersion, setGifVersion] = useState(0);
   const [doneDuration, setDoneDuration] = useState(0);
 
-  const onGifLoaded = useCallback(() => setGifVersion((v) => v + 1), []);
-  const { session, routeName, ready, regen } = useWorkoutSession(onGifLoaded);
+  const { session, routeName, ready, regen } = useWorkoutSession();
 
   const handleStart = useCallback(() => {
     unlockAudio();
@@ -34,7 +32,6 @@ export default function App() {
         <HomeScreen
           session={session}
           routeName={routeName}
-          gifVersion={gifVersion}
           ready={ready}
           onRegen={regen}
           onStart={handleStart}
@@ -43,7 +40,6 @@ export default function App() {
       {view === 'player' && session && (
         <PlayerScreen
           session={session}
-          gifVersion={gifVersion}
           onQuit={handleQuit}
           onDone={handleDone}
         />

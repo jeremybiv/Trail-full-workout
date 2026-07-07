@@ -1,5 +1,6 @@
 import type { Exercise } from '../data/exercises';
 import { UP, LG, ALL } from '../data/exercises';
+import { NAME_EN } from '../data/exerciseNamesEn';
 import { ROUNDS, PREP_DUR } from '../data/constants';
 import { hash, rng32, shuffle } from './rng';
 
@@ -56,7 +57,7 @@ export function buildTimeline(ids: string[]): Step[] {
 
 export function nextWorkName(timeline: Step[], fromIndex: number): string | null {
   for (let i = fromIndex + 1; i < timeline.length; i++) {
-    if (timeline[i].type === 'work' && timeline[i].id) return ALL[timeline[i].id!].name;
+    if (timeline[i].type === 'work' && timeline[i].id) return NAME_EN[timeline[i].id!];
   }
   return null;
 }

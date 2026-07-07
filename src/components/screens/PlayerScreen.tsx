@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
-import { buildTimeline, nextWorkName } from '../../lib/session';
-import type { Session } from '../../lib/session';
+import { NAME_EN } from '../../data/exerciseNamesEn';
 import { ALL } from '../../data/exercises';
 import { useTimer } from '../../hooks/useTimer';
+import type { Session } from '../../lib/session';
+import { buildTimeline, nextWorkName } from '../../lib/session';
 import { PlayerMedia } from '../PlayerMedia';
 
 interface Props {
   session: Session;
-  gifVersion: number;
   onQuit: () => void;
   onDone: (elapsed: number) => void;
 }
@@ -15,7 +15,7 @@ interface Props {
 const RING_R = 70;
 const RING_CIRC = 2 * Math.PI * RING_R;
 
-export function PlayerScreen({ session, gifVersion, onQuit, onDone }: Props) {
+export function PlayerScreen({ session, onQuit, onDone }: Props) {
   const [muted, setMuted] = useState(false);
   const timeline = useMemo(() => buildTimeline(session.ids), [session.ids]);
 
@@ -52,7 +52,7 @@ export function PlayerScreen({ session, gifVersion, onQuit, onDone }: Props) {
   if (step?.type === 'work') {
     phaseClass += ' work'; timerClass += ' work'; phaseText = 'TRAVAIL'; phaseCls = 'phase-work';
   } else if (step?.type === 'rest') {
-    phaseClass += ' rest'; timerClass += ' rest'; phaseText = 'RÉCUP'; phaseCls = 'phase-rest';
+    phaseClass += ' rest'; timerClass += ' rest'; phaseText = 'Repos'; phaseCls = 'phase-rest';
   } else if (step?.type === 'prep') {
     phaseClass += ' prep'; timerClass += ' prep'; phaseText = 'PRÊT'; phaseCls = 'phase-gap';
   } else {
@@ -97,14 +97,14 @@ export function PlayerScreen({ session, gifVersion, onQuit, onDone }: Props) {
 
       <p className={phaseClass}>{phaseText}</p>
 
-      <PlayerMedia step={step} gifVersion={gifVersion} paused={paused} />
+      <PlayerMedia step={step} paused={paused} />
 
       <h2 className="ex-title">
         {step?.type === 'gap'
           ? 'Round 2 dans…'
           : step?.type === 'prep'
           ? 'Prépare-toi !'
-          : (exercise?.name ?? '–')}
+          : (exercise ? NAME_EN[exercise.id] : '–')}
       </h2>
       <p className="ex-desc">
         {step?.type === 'gap'

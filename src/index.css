@@ -173,6 +173,27 @@ button {
   overflow: visible;
 }
 
+.ex-photo {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.ex-photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ex-photo .p0 { animation: ex-photo-a 3s ease-in-out infinite; }
+.ex-photo .p1 { animation: ex-photo-b 3s ease-in-out infinite; }
+.ex-photo.paused img { animation-play-state: paused; }
+
+@keyframes ex-photo-a { 0%, 40% { opacity: 1; } 50%, 90% { opacity: 0; } 100% { opacity: 1; } }
+@keyframes ex-photo-b { 0%, 40% { opacity: 0; } 50%, 90% { opacity: 1; } 100% { opacity: 0; } }
+
 .fl {
   stroke: var(--ink);
   stroke-width: 7;
