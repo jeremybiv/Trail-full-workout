@@ -374,6 +374,19 @@ button {
 .phase-lbl.rest { color: #0d1f18; background: var(--rest); }
 .phase-lbl.prep { color: #1c1208; background: var(--gold); }
 
+.side-lbl {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid var(--gold);
+  border-radius: 99px;
+  padding: 3px 12px;
+  margin: -6px 0 8px;
+  transition: opacity 0.3s;
+}
+
 /* player media circle */
 .pmedia {
   width: 200px;

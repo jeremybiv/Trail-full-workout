@@ -3,6 +3,7 @@ import { buildTimeline, nextWorkName, nextWorkStep } from '../../lib/session';
 import type { Session } from '../../lib/session';
 import { ALL } from '../../data/exercises';
 import { useTimer } from '../../hooks/useTimer';
+import { useWakeLock } from '../../hooks/useWakeLock';
 import { PlayerMedia } from '../PlayerMedia';
 
 interface Props {
@@ -20,6 +21,7 @@ export function PlayerScreen({ session, gifVersion, onQuit, onDone }: Props) {
   const [confirmQuit, setConfirmQuit] = useState(false);
   const wasPlayingRef = useRef(false);
   const timeline = useMemo(() => buildTimeline(session.ids), [session.ids]);
+  useWakeLock(true);
 
   const { step, stepIndex, rem, elapsed, totalDur, paused, done, toggle, jumpTo, start, stop } =
     useTimer(timeline, muted, onDone);
@@ -38,6 +40,11 @@ export function PlayerScreen({ session, gifVersion, onQuit, onDone }: Props) {
   const progressPct = totalDur > 0 ? Math.round((elapsed / totalDur) * 100) : 0;
   const nextName = step ? nextWorkName(timeline, stepIndex) : null;
   const nextStep = step ? nextWorkStep(timeline, stepIndex) : null;
+
+  // For unilateral exercises: show GAUCHE for first half of step, DROITE for second half
+  const sideLabel = (exercise?.unilateral && step?.type === 'work' && step.dur > 0)
+    ? (rem > step.dur / 2 ? '◀ GAUCHE' : 'DROITE ▶')
+    : null;
 
   const exDoneCount = useMemo(() => {
     let count = 0;
@@ -121,6 +128,7 @@ export function PlayerScreen({ session, gifVersion, onQuit, onDone }: Props) {
       </div>
 
       <p className={phaseClass}>{phaseText}</p>
+      {sideLabel && <p className="side-lbl">{sideLabel}</p>}
 
       <PlayerMedia step={step} nextStep={nextStep} gifVersion={gifVersion} paused={paused} />
 
