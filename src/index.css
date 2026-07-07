@@ -391,6 +391,7 @@ button {
 
 .pmedia.work { border-color: var(--blaze); }
 .pmedia.rest { border-color: var(--rest); }
+.pmedia.preview { opacity: 0.82; }
 
 .pmedia img {
   width: 100%;
@@ -538,6 +539,53 @@ button {
 
 .ctrl:active {
   transform: scale(0.93);
+}
+
+/* quit confirmation overlay */
+.quit-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quit-card {
+  background: var(--surf);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: min(80vw, 280px);
+  text-align: center;
+}
+
+.quit-card p {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0;
+}
+
+.start-btn.danger {
+  background: #c0392b;
+  box-shadow: 0 8px 24px -8px rgba(192, 57, 43, 0.6);
+  margin-top: 0;
+}
+
+.ctrl-lnk {
+  background: none;
+  border: none;
+  color: var(--dim);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px;
+  font-family: inherit;
 }
 
 /* done screen */

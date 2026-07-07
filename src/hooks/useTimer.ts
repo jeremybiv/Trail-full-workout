@@ -12,6 +12,7 @@ interface UseTimerResult {
   done: boolean;
   toggle: () => void;
   skip: (dir: -1 | 1) => void;
+  jumpTo: (idx: number) => void;
   start: () => void;
   stop: () => void;
 }
@@ -114,6 +115,14 @@ export function useTimer(
     });
   }, [timeline]);
 
+  const jumpTo = useCallback((idx: number) => {
+    const ni = Math.max(0, Math.min(idx, timeline.length - 1));
+    setSi(ni);
+    setRem(timeline[ni].dur);
+    setElapsed(timeline.slice(0, ni).reduce((a, b) => a + b.dur, 0));
+    nextTickRef.current = Date.now() + 1000;
+  }, [timeline]);
+
   // cleanup on unmount
   useEffect(() => () => { if (timerRef.current) clearTimeout(timerRef.current); }, []);
 
@@ -127,6 +136,7 @@ export function useTimer(
     done,
     toggle,
     skip,
+    jumpTo,
     start,
     stop,
   };

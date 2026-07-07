@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
-import { buildTimeline, nextWorkName } from '../../lib/session';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { buildTimeline, nextWorkName, nextWorkStep } from '../../lib/session';
 import type { Session } from '../../lib/session';
 import { ALL } from '../../data/exercises';
 import { useTimer } from '../../hooks/useTimer';
@@ -17,9 +17,11 @@ const RING_CIRC = 2 * Math.PI * RING_R;
 
 export function PlayerScreen({ session, gifVersion, onQuit, onDone }: Props) {
   const [muted, setMuted] = useState(false);
+  const [confirmQuit, setConfirmQuit] = useState(false);
+  const wasPlayingRef = useRef(false);
   const timeline = useMemo(() => buildTimeline(session.ids), [session.ids]);
 
-  const { step, stepIndex, rem, elapsed, totalDur, paused, done, toggle, skip, start, stop } =
+  const { step, stepIndex, rem, elapsed, totalDur, paused, done, toggle, jumpTo, start, stop } =
     useTimer(timeline, muted, onDone);
 
   useEffect(() => {
@@ -35,6 +37,7 @@ export function PlayerScreen({ session, gifVersion, onQuit, onDone }: Props) {
   const exercise = step?.id ? ALL[step.id] : null;
   const progressPct = totalDur > 0 ? Math.round((elapsed / totalDur) * 100) : 0;
   const nextName = step ? nextWorkName(timeline, stepIndex) : null;
+  const nextStep = step ? nextWorkStep(timeline, stepIndex) : null;
 
   const exDoneCount = useMemo(() => {
     let count = 0;
@@ -43,6 +46,32 @@ export function PlayerScreen({ session, gifVersion, onQuit, onDone }: Props) {
     }
     return count;
   }, [timeline, stepIndex]);
+
+  // Exercise-level navigation: find nearest work step in each direction
+  const prevExIdx = useMemo(() => {
+    for (let i = stepIndex - 1; i >= 0; i--) {
+      if (timeline[i]?.type === 'work') return i;
+    }
+    return 0;
+  }, [timeline, stepIndex]);
+
+  const nextExIdx = useMemo(() => {
+    for (let i = stepIndex + 1; i < timeline.length; i++) {
+      if (timeline[i]?.type === 'work') return i;
+    }
+    return stepIndex;
+  }, [timeline, stepIndex]);
+
+  function handleQuitPress() {
+    wasPlayingRef.current = !paused;
+    if (!paused) toggle();
+    setConfirmQuit(true);
+  }
+
+  function handleContinue() {
+    setConfirmQuit(false);
+    if (wasPlayingRef.current) toggle();
+  }
 
   let phaseClass = 'phase-lbl';
   let timerClass = 'timer';
@@ -66,7 +95,7 @@ export function PlayerScreen({ session, gifVersion, onQuit, onDone }: Props) {
   return (
     <div className={`player open ${phaseCls}`}>
       <div className="player-top">
-        <button className="quit-btn" onClick={onQuit}>✕</button>
+        <button className="quit-btn" onClick={handleQuitPress}>✕</button>
         <span className="round-pill">{roundLabel}</span>
         <button
           className="mute-btn"
@@ -93,10 +122,14 @@ export function PlayerScreen({ session, gifVersion, onQuit, onDone }: Props) {
 
       <p className={phaseClass}>{phaseText}</p>
 
-      <PlayerMedia step={step} gifVersion={gifVersion} paused={paused} />
+      <PlayerMedia step={step} nextStep={nextStep} gifVersion={gifVersion} paused={paused} />
 
       <h2 className="ex-title">
-        {step?.type === 'gap' ? 'Round 2 dans…' : (exercise?.name ?? '–')}
+        {step?.type === 'gap'
+          ? 'Round 2 dans…'
+          : step?.type === 'rest' && nextStep?.id
+          ? (ALL[nextStep.id]?.name ?? '–')
+          : (exercise?.name ?? '–')}
       </h2>
       <p className="ex-desc">
         {step?.type === 'gap'
@@ -130,12 +163,22 @@ export function PlayerScreen({ session, gifVersion, onQuit, onDone }: Props) {
       </p>
 
       <div className="controls">
-        <button className="ctrl" onClick={() => skip(-1)}>⏮</button>
+        <button className="ctrl" onClick={() => jumpTo(prevExIdx)}>⏮</button>
         <button className="ctrl big" onClick={toggle}>
           {paused ? '▶' : '⏸'}
         </button>
-        <button className="ctrl" onClick={() => skip(1)}>⏭</button>
+        <button className="ctrl" onClick={() => jumpTo(nextExIdx)}>⏭</button>
       </div>
+
+      {confirmQuit && (
+        <div className="quit-overlay">
+          <div className="quit-card">
+            <p>Quitter l'entraînement ?</p>
+            <button className="start-btn danger" onClick={onQuit}>Oui, quitter</button>
+            <button className="ctrl-lnk" onClick={handleContinue}>Continuer</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
