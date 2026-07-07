@@ -53,12 +53,16 @@ export function PlayerScreen({ session, gifVersion, onQuit, onDone }: Props) {
     phaseClass += ' work'; timerClass += ' work'; phaseText = 'TRAVAIL'; phaseCls = 'phase-work';
   } else if (step?.type === 'rest') {
     phaseClass += ' rest'; timerClass += ' rest'; phaseText = 'RÉCUP'; phaseCls = 'phase-rest';
+  } else if (step?.type === 'prep') {
+    phaseClass += ' prep'; timerClass += ' prep'; phaseText = 'PRÊT'; phaseCls = 'phase-gap';
   } else {
     phaseClass += ' prep'; timerClass += ' prep'; phaseText = 'PAUSE'; phaseCls = 'phase-gap';
   }
 
   const roundLabel = step?.type === 'gap'
     ? 'Entre les rounds'
+    : step?.type === 'prep'
+    ? 'Préparation'
     : `Round ${step?.round ?? 1} / 2`;
 
   const ringOffset = step ? RING_CIRC * (1 - rem / step.dur) : 0;
@@ -96,11 +100,17 @@ export function PlayerScreen({ session, gifVersion, onQuit, onDone }: Props) {
       <PlayerMedia step={step} gifVersion={gifVersion} paused={paused} />
 
       <h2 className="ex-title">
-        {step?.type === 'gap' ? 'Round 2 dans…' : (exercise?.name ?? '–')}
+        {step?.type === 'gap'
+          ? 'Round 2 dans…'
+          : step?.type === 'prep'
+          ? 'Prépare-toi !'
+          : (exercise?.name ?? '–')}
       </h2>
       <p className="ex-desc">
         {step?.type === 'gap'
           ? 'Souffle, hydrate-toi.'
+          : step?.type === 'prep'
+          ? 'Installe-toi, ça commence…'
           : step?.type === 'rest'
           ? 'Respire, secoue les bras.'
           : (exercise?.desc ?? '')}
