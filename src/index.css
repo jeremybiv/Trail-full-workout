@@ -85,6 +85,33 @@ button {
   gap: 8px;
 }
 
+.opt-row {
+  display: flex;
+  gap: 10px;
+  padding: 4px 0 12px;
+  flex-wrap: wrap;
+}
+.opt-group {
+  display: flex;
+  gap: 6px;
+}
+.opt-pill {
+  border: 1.5px solid var(--line);
+  background: transparent;
+  color: var(--dim);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.opt-pill.active {
+  background: var(--blaze);
+  border-color: var(--blaze);
+  color: #fff;
+}
+
 .workout-meta {
   display: flex;
   gap: 6px;

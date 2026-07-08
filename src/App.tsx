@@ -11,7 +11,7 @@ export default function App() {
   const [view, setView] = useState<View>('home');
   const [doneDuration, setDoneDuration] = useState(0);
 
-  const { session, routeName, ready, regen } = useWorkoutSession();
+  const { session, routeName, ready, regen, focus, duration, setFocus, setDuration } = useWorkoutSession();
 
   const handleStart = useCallback(() => {
     unlockAudio();
@@ -35,6 +35,10 @@ export default function App() {
           ready={ready}
           onRegen={regen}
           onStart={handleStart}
+          focus={focus}
+          duration={duration}
+          onFocusChange={setFocus}
+          onDurationChange={setDuration}
         />
       )}
       {view === 'player' && session && (

@@ -20,7 +20,8 @@ export function PlayerScreen({ session, onQuit, onDone }: Props) {
   const [muted, setMuted] = useState(false);
   const [confirmQuit, setConfirmQuit] = useState(false);
   const wasPlayingRef = useRef(false);
-  const timeline = useMemo(() => buildTimeline(session.ids), [session.ids]);
+  const timeline = useMemo(() => buildTimeline(session.ids, session.duration), [session.ids, session.duration]);
+  const totalRounds = session.duration === 'long' ? 4 : 2;
   useWakeLock(true);
 
   const { step, stepIndex, rem, elapsed, totalDur, paused, done, toggle, jumpTo, start, stop } =
@@ -99,7 +100,7 @@ export function PlayerScreen({ session, onQuit, onDone }: Props) {
     ? 'Entre les rounds'
     : step?.type === 'prep'
     ? 'Préparation'
-    : `Round ${step?.round ?? 1} / 2`;
+    : `Round ${step?.round ?? 1} / ${totalRounds}`;
 
   const ringOffset = step ? RING_CIRC * (1 - rem / step.dur) : 0;
 
