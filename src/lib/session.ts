@@ -61,3 +61,10 @@ export function nextWorkName(timeline: Step[], fromIndex: number): string | null
   }
   return null;
 }
+
+export function nextWorkStep(timeline: Step[], fromIndex: number): Step | null {
+  for (let i = fromIndex + 1; i < timeline.length; i++) {
+    if (timeline[i].type === 'work') return timeline[i];
+  }
+  return null;
+}

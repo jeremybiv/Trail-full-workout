@@ -6,6 +6,7 @@ export interface Exercise {
   m: MotionType;
   desc: string;
   hold?: true;
+  unilateral?: true;
 }
 
 export const UP: Exercise[] = [
@@ -15,7 +16,7 @@ export const UP: Exercise[] = [
   { id: 'dips',        name: 'Dips sur chaise',         m: 'press', desc: 'Mains en bord de chaise, fléchis-pousse.' },
   { id: 'pike',        name: 'Pike push-ups',           m: 'press', desc: 'Fessiers hauts, pompe quasi-verticale.' },
   { id: 'plank',       name: 'Gainage',                 m: 'plank', desc: 'Tête-talons alignés, respire lentement.', hold: true },
-  { id: 'sideplank',   name: 'Gainage latéral',         m: 'plank', desc: 'Avant-bras, hanches hautes.', hold: true },
+  { id: 'sideplank',   name: 'Gainage latéral',         m: 'plank', desc: 'Avant-bras, hanches hautes.', hold: true, unilateral: true },
   { id: 'mountain',    name: 'Mountain climbers',       m: 'cdyn',  desc: 'Genoux vers la poitrine, rythme soutenu.' },
   { id: 'russian',     name: 'Russian twists',          m: 'twist', desc: 'Buste incliné, rotation gauche-droite.' },
   { id: 'bicycle',     name: 'Crunchs vélo',            m: 'twist', desc: 'Coude vers le genou opposé.' },
@@ -24,7 +25,7 @@ export const UP: Exercise[] = [
   { id: 'shouldertap', name: 'Shoulder taps',           m: 'cdyn',  desc: "Planche, touche l'épaule opposée." },
   { id: 'flutter',     name: 'Flutter Kicks',           m: 'cdyn',  desc: 'Dos au sol, jambes tendues, battements alternatifs.' },
   { id: 'splitcrunch', name: 'Split Crunch',            m: 'cdyn',  desc: 'Jambes en ciseaux, crunch synchronisé.' },
-  { id: 'splanrot',    name: 'Rotation gainage latéral', m: 'twist', desc: 'Gainage latéral, rotation du buste vers le sol.' },
+  { id: 'splanrot',    name: 'Rotation gainage latéral', m: 'twist', desc: 'Gainage latéral, rotation du buste vers le sol.', unilateral: true },
   { id: 'swimmer',     name: 'Swimmers',                m: 'plank', desc: 'À plat ventre, bras-jambe opposés alternés.' },
   { id: 'birddog',     name: 'Plank Bird-Dog',          m: 'plank', desc: 'Planche, bras et jambe opposés tendus.' },
 ];
@@ -46,8 +47,8 @@ export const LG: Exercise[] = [
   { id: 'dynowalk',   name: 'Dyno Walks',                  m: 'squat', desc: 'Fente latérale dynamique, pas chassés.' },
   { id: 'askip',      name: 'A-Skips',                     m: 'cdyn',  desc: 'Montée de genou rythmée, bras coordinés.' },
   { id: 'cskip',      name: 'C-Skips',                     m: 'cdyn',  desc: 'Skip circulaire, rotation de hanche amplifiée.' },
-  { id: 'clamshell',  name: 'Coquillages debout',          m: 'squat', desc: 'Sur une jambe, ouvre la hanche en rotation externe.' },
-  { id: 'janefonda',  name: 'Jane Fonda debout',           m: 'squat', desc: 'Abduction latérale jambe tendue, contrôle du bassin.' },
+  { id: 'clamshell',  name: 'Coquillages debout',          m: 'squat', desc: 'Sur une jambe, ouvre la hanche en rotation externe.', unilateral: true },
+  { id: 'janefonda',  name: 'Jane Fonda debout',           m: 'squat', desc: 'Abduction latérale jambe tendue, contrôle du bassin.', unilateral: true },
   { id: 'monwalk',    name: 'Monster Walks',               m: 'squat', desc: 'Marche latérale en position basse, tension constante.' },
   { id: 'hamslide',   name: 'Ischio-jambiers excentriques', m: 'squat', desc: 'Glissé au sol, descente lente, remontée contrôlée.' },
   { id: 'pulsesquat', name: 'Pulse Squats',                m: 'squat', desc: 'Squat bas, micro-pulsions sans remonter.' },
