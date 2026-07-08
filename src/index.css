@@ -85,6 +85,33 @@ button {
   gap: 8px;
 }
 
+.opt-row {
+  display: flex;
+  gap: 10px;
+  padding: 4px 0 12px;
+  flex-wrap: wrap;
+}
+.opt-group {
+  display: flex;
+  gap: 6px;
+}
+.opt-pill {
+  border: 1.5px solid var(--line);
+  background: transparent;
+  color: var(--dim);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.opt-pill.active {
+  background: var(--blaze);
+  border-color: var(--blaze);
+  color: #fff;
+}
+
 .workout-meta {
   display: flex;
   gap: 6px;
@@ -686,6 +713,36 @@ button {
   margin-top: 2px;
   display: block;
 }
+
+.history-list {
+  width: 100%;
+  max-width: 320px;
+  margin: 4px 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.history-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: var(--dim);
+  margin: 0 0 4px;
+}
+.history-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surf);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 13px;
+}
+.history-date { color: var(--dim); flex: 1; }
+.history-tag { color: var(--ink); font-weight: 600; }
+.history-dur { color: var(--gold); font-weight: 700; font-variant-numeric: tabular-nums; }
 
 .done .start-btn {
   max-width: 320px;

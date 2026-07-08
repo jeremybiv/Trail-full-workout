@@ -9,9 +9,13 @@ interface Props {
   ready: boolean;
   onRegen: () => void;
   onStart: () => void;
+  focus: 'upper' | 'lower';
+  duration: 'short' | 'long';
+  onFocusChange: (f: 'upper' | 'lower') => void;
+  onDurationChange: (d: 'short' | 'long') => void;
 }
 
-export function HomeScreen({ session, routeName, ready, onRegen, onStart }: Props) {
+export function HomeScreen({ session, routeName, ready, onRegen, onStart, focus, duration, onFocusChange, onDurationChange }: Props) {
   const exercises = session ? session.ids.map((id) => ALL[id]) : [];
 
   return (
@@ -24,9 +28,34 @@ export function HomeScreen({ session, routeName, ready, onRegen, onStart }: Prop
         </div>
       </div>
 
+      <div className="opt-row">
+        <div className="opt-group">
+          {(['upper', 'lower'] as const).map((f) => (
+            <button
+              key={f}
+              className={`opt-pill${focus === f ? ' active' : ''}`}
+              onClick={() => onFocusChange(f)}
+            >
+              {f === 'upper' ? '💪 Upper' : '🦵 Lower'}
+            </button>
+          ))}
+        </div>
+        <div className="opt-group">
+          {(['short', 'long'] as const).map((d) => (
+            <button
+              key={d}
+              className={`opt-pill${duration === d ? ' active' : ''}`}
+              onClick={() => onDurationChange(d)}
+            >
+              {d === 'short' ? '15 min' : '30 min'}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <div className="workout-meta">
-        <span className="meta-pill">~14 min</span>
-        <span className="meta-pill">2 rounds</span>
+        <span className="meta-pill">{duration === 'short' ? '~14 min' : '~29 min'}</span>
+        <span className="meta-pill">{duration === 'short' ? '2 rounds' : '4 rounds'}</span>
         <span className="meta-pill">8 exercices</span>
       </div>
 
