@@ -58,6 +58,7 @@ export function useTimer(
         return next;
       });
       setElapsed((e) => e + 1);
+      timerRef.current = setTimeout(tick, 50);
     };
 
     timerRef.current = setTimeout(tick, 100);

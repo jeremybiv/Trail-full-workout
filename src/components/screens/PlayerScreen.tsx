@@ -1,14 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { buildTimeline, nextWorkName, nextWorkStep } from '../../lib/session';
-import type { Session } from '../../lib/session';
+import { NAME_EN } from '../../data/exerciseNamesEn';
 import { ALL } from '../../data/exercises';
 import { useTimer } from '../../hooks/useTimer';
 import { useWakeLock } from '../../hooks/useWakeLock';
+import type { Session } from '../../lib/session';
+import { buildTimeline, nextWorkName, nextWorkStep } from '../../lib/session';
 import { PlayerMedia } from '../PlayerMedia';
 
 interface Props {
   session: Session;
-  gifVersion: number;
   onQuit: () => void;
   onDone: (elapsed: number) => void;
 }
@@ -16,7 +16,7 @@ interface Props {
 const RING_R = 70;
 const RING_CIRC = 2 * Math.PI * RING_R;
 
-export function PlayerScreen({ session, gifVersion, onQuit, onDone }: Props) {
+export function PlayerScreen({ session, onQuit, onDone }: Props) {
   const [muted, setMuted] = useState(false);
   const [confirmQuit, setConfirmQuit] = useState(false);
   const wasPlayingRef = useRef(false);
@@ -88,13 +88,17 @@ export function PlayerScreen({ session, gifVersion, onQuit, onDone }: Props) {
   if (step?.type === 'work') {
     phaseClass += ' work'; timerClass += ' work'; phaseText = 'TRAVAIL'; phaseCls = 'phase-work';
   } else if (step?.type === 'rest') {
-    phaseClass += ' rest'; timerClass += ' rest'; phaseText = 'RÉCUP'; phaseCls = 'phase-rest';
+    phaseClass += ' rest'; timerClass += ' rest'; phaseText = 'Repos'; phaseCls = 'phase-rest';
+  } else if (step?.type === 'prep') {
+    phaseClass += ' prep'; timerClass += ' prep'; phaseText = 'PRÊT'; phaseCls = 'phase-gap';
   } else {
     phaseClass += ' prep'; timerClass += ' prep'; phaseText = 'PAUSE'; phaseCls = 'phase-gap';
   }
 
   const roundLabel = step?.type === 'gap'
     ? 'Entre les rounds'
+    : step?.type === 'prep'
+    ? 'Préparation'
     : `Round ${step?.round ?? 1} / 2`;
 
   const ringOffset = step ? RING_CIRC * (1 - rem / step.dur) : 0;
@@ -130,18 +134,22 @@ export function PlayerScreen({ session, gifVersion, onQuit, onDone }: Props) {
       <p className={phaseClass}>{phaseText}</p>
       {sideLabel && <p className="side-lbl">{sideLabel}</p>}
 
-      <PlayerMedia step={step} nextStep={nextStep} gifVersion={gifVersion} paused={paused} />
+      <PlayerMedia step={step} nextStep={nextStep} paused={paused} />
 
       <h2 className="ex-title">
         {step?.type === 'gap'
           ? 'Round 2 dans…'
+          : step?.type === 'prep'
+          ? 'Prépare-toi !'
           : step?.type === 'rest' && nextStep?.id
           ? (ALL[nextStep.id]?.name ?? '–')
-          : (exercise?.name ?? '–')}
+          : (exercise ? NAME_EN[exercise.id] : '–')}
       </h2>
       <p className="ex-desc">
         {step?.type === 'gap'
           ? 'Souffle, hydrate-toi.'
+          : step?.type === 'prep'
+          ? 'Installe-toi, ça commence…'
           : step?.type === 'rest'
           ? 'Respire, secoue les bras.'
           : (exercise?.desc ?? '')}

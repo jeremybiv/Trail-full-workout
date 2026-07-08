@@ -1,6 +1,7 @@
 import type { Exercise } from '../data/exercises';
 import { UP, LG, ALL } from '../data/exercises';
-import { ROUNDS } from '../data/constants';
+import { NAME_EN } from '../data/exerciseNamesEn';
+import { ROUNDS, PREP_DUR } from '../data/constants';
 import { hash, rng32, shuffle } from './rng';
 
 export interface Session {
@@ -9,7 +10,7 @@ export interface Session {
   seed: string;
 }
 
-export type StepKind = 'work' | 'rest' | 'gap';
+export type StepKind = 'prep' | 'work' | 'rest' | 'gap';
 
 export interface Step {
   type: StepKind;
@@ -42,7 +43,7 @@ export function buildSession(seed: string, legIds?: string[]): Session {
 }
 
 export function buildTimeline(ids: string[]): Step[] {
-  const steps: Step[] = [];
+  const steps: Step[] = [{ type: 'prep', dur: PREP_DUR, round: 1 }];
   ROUNDS.forEach((r, ri) => {
     if (ri === 1) steps.push({ type: 'gap', dur: 30, round: 2 });
     ids.forEach((id, i) => {
@@ -56,7 +57,7 @@ export function buildTimeline(ids: string[]): Step[] {
 
 export function nextWorkName(timeline: Step[], fromIndex: number): string | null {
   for (let i = fromIndex + 1; i < timeline.length; i++) {
-    if (timeline[i].type === 'work' && timeline[i].id) return ALL[timeline[i].id!].name;
+    if (timeline[i].type === 'work' && timeline[i].id) return NAME_EN[timeline[i].id!];
   }
   return null;
 }

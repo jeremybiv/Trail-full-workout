@@ -6,13 +6,12 @@ import { ExerciseCard } from '../ExerciseCard';
 interface Props {
   session: Session | null;
   routeName: string;
-  gifVersion: number;
   ready: boolean;
   onRegen: () => void;
   onStart: () => void;
 }
 
-export function HomeScreen({ session, routeName, gifVersion, ready, onRegen, onStart }: Props) {
+export function HomeScreen({ session, routeName, ready, onRegen, onStart }: Props) {
   const exercises = session ? session.ids.map((id) => ALL[id]) : [];
 
   return (
@@ -37,7 +36,6 @@ export function HomeScreen({ session, routeName, gifVersion, ready, onRegen, onS
             key={ex.id}
             exercise={ex}
             isLeg={session ? session.legIds.includes(ex.id) : false}
-            gifVersion={gifVersion}
           />
         ))}
       </div>

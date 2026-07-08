@@ -9,5 +9,7 @@ export const ROUNDS: { work: number; rest: number }[] = [
   { work: 30, rest: 15 },
 ];
 
+export const PREP_DUR = 10;
+
 export const WDAYS = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
 export const MONTHS = ['jan', 'fév', 'mar', 'avr', 'mai', 'juin', 'juil', 'aoû', 'sep', 'oct', 'nov', 'déc'];
