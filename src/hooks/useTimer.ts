@@ -45,19 +45,17 @@ export function useTimer(
 
     const tick = () => {
       const now = Date.now();
-      if (now < nextTickRef.current) {
-        timerRef.current = setTimeout(tick, 50);
-        return;
-      }
-      nextTickRef.current += 1000;
+      if (now >= nextTickRef.current) {
+        nextTickRef.current += 1000;
 
-      setRem((r) => {
-        if (r <= 1) return 0;
-        const next = r - 1;
-        if (next <= 3) beep(660, 0.08, mutedRef.current);
-        return next;
-      });
-      setElapsed((e) => e + 1);
+        setRem((r) => {
+          if (r <= 1) return 0;
+          const next = r - 1;
+          if (next <= 3) beep(660, 0.08, mutedRef.current);
+          return next;
+        });
+        setElapsed((e) => e + 1);
+      }
       timerRef.current = setTimeout(tick, 50);
     };
 

@@ -1,7 +1,6 @@
 import type { Step } from '../lib/session';
 import { ALL } from '../data/exercises';
-import { PHOTO_EXERCISES } from '../data/exercisePhotos';
-import { ExercisePhoto } from './ExercisePhoto';
+import { ExerciseMedia } from './ExerciseMedia';
 import { ExerciseSvg } from './ExerciseSvg';
 
 interface Props {
@@ -25,11 +24,7 @@ export function PlayerMedia({ step, nextStep, paused }: Props) {
   return (
     <div className={cls}>
       {exercise ? (
-        PHOTO_EXERCISES.has(exercise.id) ? (
-          <ExercisePhoto id={exercise.id} paused={paused} />
-        ) : (
-          <ExerciseSvg motionType={exercise.m} variant="player" paused={paused} />
-        )
+        <ExerciseMedia exercise={exercise} variant="player" paused={paused} />
       ) : (
         <ExerciseSvg motionType="plank" variant="player" paused={paused} />
       )}

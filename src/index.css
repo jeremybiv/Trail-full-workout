@@ -187,11 +187,11 @@ button {
   object-fit: cover;
 }
 
-.ex-photo .p0 { animation: ex-photo-a 3s ease-in-out infinite; }
-.ex-photo .p1 { animation: ex-photo-b 3s ease-in-out infinite; }
+@media (prefers-reduced-motion: no-preference) {
+  .ex-photo .p1 { animation: ex-photo-b 3s ease-in-out infinite; }
+}
 .ex-photo.paused img { animation-play-state: paused; }
 
-@keyframes ex-photo-a { 0%, 40% { opacity: 1; } 50%, 90% { opacity: 0; } 100% { opacity: 1; } }
 @keyframes ex-photo-b { 0%, 40% { opacity: 0; } 50%, 90% { opacity: 1; } 100% { opacity: 0; } }
 
 .fl {
@@ -423,8 +423,8 @@ button {
   margin-bottom: 12px;
 }
 
-.pmedia.work { border-color: var(--blaze); }
-.pmedia.rest { border-color: var(--rest); }
+.pmedia.work { border-color: var(--blaze); border-style: solid; }
+.pmedia.rest { border-color: var(--rest); border-style: dashed; border-width: 3px; }
 .pmedia.preview { opacity: 0.82; }
 
 .pmedia img {
@@ -451,6 +451,15 @@ button {
   opacity: 0;
 }
 
+.next-eyebrow {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 700;
+  color: var(--rest);
+  margin: 0 0 4px;
+}
+
 .ex-title {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 40px;
@@ -459,6 +468,8 @@ button {
   margin: 0 0 6px;
   line-height: 1;
 }
+
+.player.phase-rest .ex-title { margin-bottom: 16px; }
 
 .ex-desc {
   font-size: 14px;
@@ -469,8 +480,6 @@ button {
   line-height: 1.4;
   min-height: 40px;
 }
-
-.player.phase-rest .ex-desc { font-size: 13px; }
 
 /* timer ring */
 .timer-ring-wrap {
@@ -534,12 +543,6 @@ button {
 }
 
 .next-lbl b { color: var(--ink); }
-
-.player.phase-rest .next-lbl {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--ink);
-}
 
 .controls {
   display: flex;
