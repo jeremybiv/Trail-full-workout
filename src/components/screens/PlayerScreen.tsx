@@ -22,7 +22,7 @@ export function PlayerScreen({ session, onQuit, onDone }: Props) {
   const wasPlayingRef = useRef(false);
   const timeline = useMemo(() => buildTimeline(session.ids, session.duration), [session.ids, session.duration]);
   const totalRounds = session.duration === 'long' ? 4 : 2;
-  useWakeLock(true);
+  const requestWakeLock = useWakeLock(true);
 
   const { step, stepIndex, rem, elapsed, totalDur, paused, done, toggle, jumpTo, start, stop } =
     useTimer(timeline, muted, onDone);
@@ -87,13 +87,13 @@ export function PlayerScreen({ session, onQuit, onDone }: Props) {
   let phaseCls = 'phase-gap';
 
   if (step?.type === 'work') {
-    phaseClass += ' work'; timerClass += ' work'; phaseText = 'TRAVAIL'; phaseCls = 'phase-work';
+    phaseClass += ' work'; timerClass += ' work'; phaseText = '🔥 TRAVAIL'; phaseCls = 'phase-work';
   } else if (step?.type === 'rest') {
-    phaseClass += ' rest'; timerClass += ' rest'; phaseText = 'Repos'; phaseCls = 'phase-rest';
+    phaseClass += ' rest'; timerClass += ' rest'; phaseText = '💨 Repos'; phaseCls = 'phase-rest';
   } else if (step?.type === 'prep') {
-    phaseClass += ' prep'; timerClass += ' prep'; phaseText = 'PRÊT'; phaseCls = 'phase-gap';
+    phaseClass += ' prep'; timerClass += ' prep'; phaseText = '⏱ PRÊT'; phaseCls = 'phase-gap';
   } else {
-    phaseClass += ' prep'; timerClass += ' prep'; phaseText = 'PAUSE'; phaseCls = 'phase-gap';
+    phaseClass += ' prep'; timerClass += ' prep'; phaseText = '⏸ PAUSE'; phaseCls = 'phase-gap';
   }
 
   const roundLabel = step?.type === 'gap'
@@ -103,6 +103,52 @@ export function PlayerScreen({ session, onQuit, onDone }: Props) {
     : `Round ${step?.round ?? 1} / ${totalRounds}`;
 
   const ringOffset = step ? RING_CIRC * (1 - rem / step.dur) : 0;
+
+  const ring = (
+    <div className="timer-ring-wrap">
+      <svg className="timer-ring" viewBox="0 0 160 160" width="160" height="160">
+        <circle className="ring-bg" cx="80" cy="80" r={RING_R} />
+        <circle
+          className={`ring-fill ${step?.type ?? 'prep'}`}
+          cx="80"
+          cy="80"
+          r={RING_R}
+          strokeDasharray={RING_CIRC}
+          strokeDashoffset={ringOffset}
+        />
+      </svg>
+      <div className={`${timerClass}${paused ? ' paused' : ''}`}>{rem}</div>
+    </div>
+  );
+
+  const mediaBlock = (
+    <>
+      <PlayerMedia step={step} nextStep={nextStep} paused={paused} />
+
+      {step?.type === 'rest' && nextStep?.id && (
+        <p className="next-eyebrow">Prochain exercice</p>
+      )}
+
+      <h2 className="ex-title">
+        {step?.type === 'gap'
+          ? `Round ${step?.round ?? 2} dans…`
+          : step?.type === 'prep'
+          ? 'Prépare-toi !'
+          : step?.type === 'rest' && nextStep?.id
+          ? (NAME_EN[nextStep.id] ?? '–')
+          : (exercise ? NAME_EN[exercise.id] : '–')}
+      </h2>
+      {step?.type !== 'rest' && (
+        <p className="ex-desc">
+          {step?.type === 'gap'
+            ? 'Souffle, hydrate-toi.'
+            : step?.type === 'prep'
+            ? 'Installe-toi, ça commence…'
+            : (exercise?.desc ?? '')}
+        </p>
+      )}
+    </>
+  );
 
   return (
     <div className={`player open ${phaseCls}`}>
@@ -135,53 +181,31 @@ export function PlayerScreen({ session, onQuit, onDone }: Props) {
       <p className={phaseClass}>{phaseText}</p>
       {sideLabel && <p className="side-lbl">{sideLabel}</p>}
 
-      <PlayerMedia step={step} nextStep={nextStep} paused={paused} />
+      {step?.type === 'rest' ? (
+        <>
+          {ring}
+          {mediaBlock}
+        </>
+      ) : (
+        <>
+          {mediaBlock}
+          {ring}
+        </>
+      )}
 
-      <h2 className="ex-title">
-        {step?.type === 'gap'
-          ? 'Round 2 dans…'
-          : step?.type === 'prep'
-          ? 'Prépare-toi !'
-          : step?.type === 'rest' && nextStep?.id
-          ? (ALL[nextStep.id]?.name ?? '–')
-          : (exercise ? NAME_EN[exercise.id] : '–')}
-      </h2>
-      <p className="ex-desc">
-        {step?.type === 'gap'
-          ? 'Souffle, hydrate-toi.'
-          : step?.type === 'prep'
-          ? 'Installe-toi, ça commence…'
-          : step?.type === 'rest'
-          ? 'Respire, secoue les bras.'
-          : (exercise?.desc ?? '')}
-      </p>
-
-      <div className="timer-ring-wrap">
-        <svg className="timer-ring" viewBox="0 0 160 160" width="160" height="160">
-          <circle className="ring-bg" cx="80" cy="80" r={RING_R} />
-          <circle
-            className={`ring-fill ${step?.type ?? 'prep'}`}
-            cx="80"
-            cy="80"
-            r={RING_R}
-            strokeDasharray={RING_CIRC}
-            strokeDashoffset={ringOffset}
-          />
-        </svg>
-        <div className={`${timerClass}${paused ? ' paused' : ''}`}>{rem}</div>
-      </div>
-
-      <p className="next-lbl">
-        {nextName ? (
-          <>Ensuite : <b>{nextName}</b></>
-        ) : step?.type === 'work' ? (
-          'Dernier exercice 💪'
-        ) : null}
-      </p>
+      {step?.type !== 'rest' && (
+        <p className="next-lbl">
+          {nextName ? (
+            <>Ensuite : <b>{nextName}</b></>
+          ) : step?.type === 'work' ? (
+            'Dernier exercice 💪'
+          ) : null}
+        </p>
+      )}
 
       <div className="controls">
         <button className="ctrl" onClick={() => jumpTo(prevExIdx)}>⏮</button>
-        <button className="ctrl big" onClick={toggle}>
+        <button className="ctrl big" onClick={() => { toggle(); requestWakeLock(); }}>
           {paused ? '▶' : '⏸'}
         </button>
         <button className="ctrl" onClick={() => jumpTo(nextExIdx)}>⏭</button>
