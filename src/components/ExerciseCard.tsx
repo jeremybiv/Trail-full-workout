@@ -1,8 +1,6 @@
 import type { Exercise } from '../data/exercises';
 import { NAME_EN } from '../data/exerciseNamesEn';
-import { PHOTO_EXERCISES } from '../data/exercisePhotos';
-import { ExercisePhoto } from './ExercisePhoto';
-import { ExerciseSvg } from './ExerciseSvg';
+import { ExerciseMedia } from './ExerciseMedia';
 
 interface Props {
   exercise: Exercise;
@@ -14,11 +12,7 @@ export function ExerciseCard({ exercise, isLeg }: Props) {
     <div className={`ex-card${isLeg ? ' leg' : ''}`}>
       <span className="cat-dot" />
       <div className="media-wrap">
-        {PHOTO_EXERCISES.has(exercise.id) ? (
-          <ExercisePhoto id={exercise.id} />
-        ) : (
-          <ExerciseSvg motionType={exercise.m} variant="card" />
-        )}
+        <ExerciseMedia exercise={exercise} variant="card" />
       </div>
       <div className="ex-info">
         <p className="ex-name">{NAME_EN[exercise.id]}</p>
