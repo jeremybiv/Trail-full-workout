@@ -1,8 +1,10 @@
+import { useCallback, useRef, useState } from 'react';
 import type { Session } from '../../lib/session';
 import { ALL } from '../../data/exercises';
 import { dateLabel } from '../../lib/format';
 import { ExerciseCard } from '../ExerciseCard';
 import { InstallBanner } from '../InstallBanner';
+import { InstallModal } from '../InstallModal';
 
 interface Props {
   session: Session | null;
@@ -28,6 +30,31 @@ export function HomeScreen({
   needRefresh, onUpdate,
 }: Props) {
   const exercises = session ? session.ids.map((id) => ALL[id]) : [];
+  const [showModal, setShowModal] = useState(false);
+  const modalShown = useRef(false);
+
+  const handleStartClick = useCallback(() => {
+    if ((canInstall || isIOSInstallable) && !modalShown.current) {
+      modalShown.current = true;
+      setShowModal(true);
+    } else {
+      onStart();
+    }
+  }, [canInstall, isIOSInstallable, onStart]);
+
+  const handleModalInstall = useCallback(() => {
+    onInstall();
+    setShowModal(false);
+    // On Android, the native prompt takes over; don't start the workout simultaneously.
+    // On iOS we handle it in handleModalContinue instead.
+    if (!isIOSInstallable) return;
+    onStart();
+  }, [onInstall, isIOSInstallable, onStart]);
+
+  const handleModalContinue = useCallback(() => {
+    setShowModal(false);
+    onStart();
+  }, [onStart]);
 
   return (
     <div className="home">
@@ -38,6 +65,8 @@ export function HomeScreen({
           <button className="regen-btn" onClick={onRegen} title="Changer les exercices">🎲</button>
         </div>
       </div>
+
+      <InstallBanner canInstall={canInstall} isIOS={isIOSInstallable} onInstall={onInstall} />
 
       <div className="opt-row">
         <div className="opt-group">
@@ -80,17 +109,24 @@ export function HomeScreen({
         ))}
       </div>
 
-      <button className="start-btn" onClick={onStart} disabled={!ready}>
+      <button className="start-btn" onClick={handleStartClick} disabled={!ready}>
         ▶ START
       </button>
-
-      <InstallBanner canInstall={canInstall} isIOS={isIOSInstallable} onInstall={onInstall} />
 
       {needRefresh && (
         <div className="update-banner">
           Nouvelle version disponible
           <button className="update-btn" onClick={onUpdate}>Mettre à jour</button>
         </div>
+      )}
+
+      {showModal && (
+        <InstallModal
+          isIOS={isIOSInstallable}
+          onInstall={handleModalInstall}
+          onContinue={handleModalContinue}
+          onClose={() => setShowModal(false)}
+        />
       )}
     </div>
   );
