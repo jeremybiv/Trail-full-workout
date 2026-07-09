@@ -829,6 +829,10 @@ button {
   white-space: nowrap;
 }
 .install-bar-cta:active { opacity: 0.85; }
+.install-bar-cta--muted {
+  background: var(--surf2);
+  color: var(--dim);
+}
 
 .install-bar-close {
   position: absolute;
@@ -978,6 +982,21 @@ button {
   padding: 8px;
 }
 .modal-btn-ghost:active { color: var(--ink); }
+
+.modal-browser-hint {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  background: var(--surf2);
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 0.85rem;
+  color: var(--dim);
+  text-align: left;
+  line-height: 1.4;
+  margin-bottom: 20px;
+}
 
 /* ── UPDATE BANNER ── */
 .update-banner {

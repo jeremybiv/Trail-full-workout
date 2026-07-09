@@ -16,9 +16,11 @@ interface Props {
   duration: 'short' | 'long';
   onFocusChange: (f: 'upper' | 'lower') => void;
   onDurationChange: (d: 'short' | 'long') => void;
-  canInstall: boolean;
-  isIOSInstallable: boolean;
+  showInstall: boolean;
+  promptReady: boolean;
+  isIOS: boolean;
   onInstall: () => void;
+  onDismissInstall: () => void;
   needRefresh: boolean;
   onUpdate: () => void;
 }
@@ -26,7 +28,7 @@ interface Props {
 export function HomeScreen({
   session, routeName, ready, onRegen, onStart,
   focus, duration, onFocusChange, onDurationChange,
-  canInstall, isIOSInstallable, onInstall,
+  showInstall, promptReady, isIOS, onInstall, onDismissInstall,
   needRefresh, onUpdate,
 }: Props) {
   const exercises = session ? session.ids.map((id) => ALL[id]) : [];
@@ -34,22 +36,21 @@ export function HomeScreen({
   const modalShown = useRef(false);
 
   const handleStartClick = useCallback(() => {
-    if ((canInstall || isIOSInstallable) && !modalShown.current) {
+    if (showInstall && !modalShown.current) {
       modalShown.current = true;
       setShowModal(true);
     } else {
       onStart();
     }
-  }, [canInstall, isIOSInstallable, onStart]);
+  }, [showInstall, onStart]);
 
   const handleModalInstall = useCallback(() => {
     onInstall();
     setShowModal(false);
-    // On Android, the native prompt takes over; don't start the workout simultaneously.
-    // On iOS we handle it in handleModalContinue instead.
-    if (!isIOSInstallable) return;
-    onStart();
-  }, [onInstall, isIOSInstallable, onStart]);
+    // On Android the native prompt takes over; don't start simultaneously.
+    // On iOS there's no native prompt so we proceed to the workout.
+    if (isIOS) onStart();
+  }, [onInstall, isIOS, onStart]);
 
   const handleModalContinue = useCallback(() => {
     setShowModal(false);
@@ -66,7 +67,13 @@ export function HomeScreen({
         </div>
       </div>
 
-      <InstallBanner canInstall={canInstall} isIOS={isIOSInstallable} onInstall={onInstall} />
+      <InstallBanner
+        show={showInstall}
+        promptReady={promptReady}
+        isIOS={isIOS}
+        onInstall={onInstall}
+        onDismiss={onDismissInstall}
+      />
 
       <div className="opt-row">
         <div className="opt-group">
@@ -122,7 +129,8 @@ export function HomeScreen({
 
       {showModal && (
         <InstallModal
-          isIOS={isIOSInstallable}
+          promptReady={promptReady}
+          isIOS={isIOS}
           onInstall={handleModalInstall}
           onContinue={handleModalContinue}
           onClose={() => setShowModal(false)}

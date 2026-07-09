@@ -6,8 +6,9 @@ interface BeforeInstallPromptEvent extends Event {
   readonly userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 }
 
-function isIOS() {
-  return /iphone|ipad|ipod/i.test(navigator.userAgent);
+function isIOSSafari() {
+  const ua = navigator.userAgent;
+  return /iphone|ipad|ipod/i.test(ua) && /safari/i.test(ua) && !/crios|fxios|chrome/i.test(ua);
 }
 
 function isInStandaloneMode() {
@@ -17,11 +18,21 @@ function isInStandaloneMode() {
   );
 }
 
+const DISMISSED_KEY = 'pwa-install-dismissed';
+
 export function usePWA() {
   const deferredPrompt = useRef<BeforeInstallPromptEvent | null>(null);
-  const [canInstall, setCanInstall] = useState(false);
-  const [isIOSInstallable, setIsIOSInstallable] = useState(false);
-  const [installed, setInstalled] = useState(false);
+
+  // true when the native beforeinstallprompt is captured and ready to fire
+  const [promptReady, setPromptReady] = useState(false);
+
+  // true once installed this session (standalone launch or appinstalled event)
+  const [standalone, setStandalone] = useState(false);
+
+  // user permanently dismissed the banner
+  const [dismissed, setDismissed] = useState(() => !!localStorage.getItem(DISMISSED_KEY));
+
+  const ios = isIOSSafari();
 
   const {
     needRefresh: [needRefresh],
@@ -30,37 +41,44 @@ export function usePWA() {
 
   useEffect(() => {
     if (isInStandaloneMode()) {
-      setInstalled(true);
-      return;
-    }
-    if (isIOS()) {
-      setIsIOSInstallable(true);
+      setStandalone(true);
       return;
     }
 
-    const handler = (e: Event) => {
+    const onPrompt = (e: Event) => {
       e.preventDefault();
       deferredPrompt.current = e as BeforeInstallPromptEvent;
-      setCanInstall(true);
+      setPromptReady(true);
+    };
+    const onInstalled = () => {
+      setPromptReady(false);
+      setStandalone(true);
     };
 
-    window.addEventListener('beforeinstallprompt', handler);
-    window.addEventListener('appinstalled', () => {
-      setCanInstall(false);
-      setInstalled(true);
-    });
-
-    return () => window.removeEventListener('beforeinstallprompt', handler);
+    window.addEventListener('beforeinstallprompt', onPrompt);
+    window.addEventListener('appinstalled', onInstalled);
+    return () => {
+      window.removeEventListener('beforeinstallprompt', onPrompt);
+      window.removeEventListener('appinstalled', onInstalled);
+    };
   }, []);
+
+  // Show install UI whenever the app is NOT running standalone and user hasn't dismissed
+  const showInstall = !standalone && !dismissed && (ios || 'serviceWorker' in navigator);
 
   async function install() {
     if (!deferredPrompt.current) return;
     await deferredPrompt.current.prompt();
     const { outcome } = await deferredPrompt.current.userChoice;
-    if (outcome === 'accepted') setInstalled(true);
+    if (outcome === 'accepted') setStandalone(true);
     deferredPrompt.current = null;
-    setCanInstall(false);
+    setPromptReady(false);
   }
 
-  return { canInstall, isIOSInstallable, installed, install, needRefresh, updateServiceWorker };
+  function dismissInstall() {
+    localStorage.setItem(DISMISSED_KEY, '1');
+    setDismissed(true);
+  }
+
+  return { showInstall, promptReady, ios, install, dismissInstall, needRefresh, updateServiceWorker };
 }

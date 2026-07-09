@@ -16,7 +16,7 @@ export default function App() {
 
   const { session, routeName, ready, regen, focus, duration, setFocus, setDuration } = useWorkoutSession();
   const { records, addRecord } = useWorkoutHistory();
-  const { canInstall, isIOSInstallable, installed, install, needRefresh, updateServiceWorker } = usePWA();
+  const { showInstall, promptReady, ios, install, dismissInstall, needRefresh, updateServiceWorker } = usePWA();
 
   const handleStart = useCallback(() => {
     unlockAudio();
@@ -54,9 +54,11 @@ export default function App() {
           duration={duration}
           onFocusChange={setFocus}
           onDurationChange={setDuration}
-          canInstall={canInstall && !installed}
-          isIOSInstallable={isIOSInstallable && !installed}
+          showInstall={showInstall}
+          promptReady={promptReady}
+          isIOS={ios}
           onInstall={install}
+          onDismissInstall={dismissInstall}
           needRefresh={needRefresh}
           onUpdate={() => updateServiceWorker(true)}
         />

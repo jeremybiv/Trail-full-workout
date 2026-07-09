@@ -1,15 +1,13 @@
-import { useState } from 'react';
-
 interface Props {
-  canInstall: boolean;
+  show: boolean;
+  promptReady: boolean;
   isIOS: boolean;
   onInstall: () => void;
+  onDismiss: () => void;
 }
 
-export function InstallBanner({ canInstall, isIOS, onInstall }: Props) {
-  const [dismissed, setDismissed] = useState(false);
-
-  if (dismissed || (!canInstall && !isIOS)) return null;
+export function InstallBanner({ show, promptReady, isIOS, onInstall, onDismiss }: Props) {
+  if (!show) return null;
 
   return (
     <div className="install-bar">
@@ -26,18 +24,22 @@ export function InstallBanner({ canInstall, isIOS, onInstall }: Props) {
         <span>Accès rapide, sans app store</span>
       </div>
 
-      {canInstall ? (
+      {promptReady ? (
         <button className="install-bar-cta" onClick={onInstall}>
           Installer
         </button>
+      ) : isIOS ? (
+        <button className="install-bar-cta" onClick={onInstall}>
+          Comment ?
+        </button>
       ) : (
-        <button className="install-bar-cta" onClick={() => setDismissed(true)}>
-          {/* iOS: just dismiss, the modal on START will give full instructions */}
+        /* Prompt not yet available (e.g. after reinstall cooldown): point to browser UI */
+        <button className="install-bar-cta install-bar-cta--muted" onClick={onInstall}>
           Voir
         </button>
       )}
 
-      <button className="install-bar-close" onClick={() => setDismissed(true)}>✕</button>
+      <button className="install-bar-close" onClick={onDismiss} title="Ne plus afficher">✕</button>
     </div>
   );
 }
