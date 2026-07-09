@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { NAME_EN } from '../../data/exerciseNamesEn';
+import { NAME_FR } from '../../data/exerciseNamesFr';
 import { ALL } from '../../data/exercises';
 import { useTimer } from '../../hooks/useTimer';
 import { useWakeLock } from '../../hooks/useWakeLock';
@@ -135,8 +135,8 @@ export function PlayerScreen({ session, onQuit, onDone }: Props) {
           : step?.type === 'prep'
           ? 'Prépare-toi !'
           : step?.type === 'rest' && nextStep?.id
-          ? (NAME_EN[nextStep.id] ?? '–')
-          : (exercise ? NAME_EN[exercise.id] : '–')}
+          ? (NAME_FR[nextStep.id] ?? '–')
+          : (exercise ? NAME_FR[exercise.id] : '–')}
       </h2>
       {step?.type !== 'rest' && (
         <p className="ex-desc">

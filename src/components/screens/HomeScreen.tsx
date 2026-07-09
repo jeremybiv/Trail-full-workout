@@ -1,8 +1,10 @@
 import { useCallback, useRef, useState } from 'react';
 import type { Session } from '../../lib/session';
+import type { Exercise } from '../../data/exercises';
 import { ALL } from '../../data/exercises';
 import { dateLabel } from '../../lib/format';
 import { ExerciseCard } from '../ExerciseCard';
+import { ExerciseDetailModal } from '../ExerciseDetailModal';
 import { InstallBanner } from '../InstallBanner';
 import { InstallModal } from '../InstallModal';
 
@@ -34,6 +36,7 @@ export function HomeScreen({
   const exercises = session ? session.ids.map((id) => ALL[id]) : [];
   const [showModal, setShowModal] = useState(false);
   const modalShown = useRef(false);
+  const [detailExercise, setDetailExercise] = useState<{ ex: Exercise; isLeg: boolean } | null>(null);
 
   const handleStartClick = useCallback(() => {
     if (showInstall && !modalShown.current) {
@@ -107,13 +110,17 @@ export function HomeScreen({
       </div>
 
       <div className="ex-list">
-        {exercises.map((ex) => (
-          <ExerciseCard
-            key={ex.id}
-            exercise={ex}
-            isLeg={session ? session.legIds.includes(ex.id) : false}
-          />
-        ))}
+        {exercises.map((ex) => {
+          const isLeg = session ? session.legIds.includes(ex.id) : false;
+          return (
+            <ExerciseCard
+              key={ex.id}
+              exercise={ex}
+              isLeg={isLeg}
+              onClick={() => setDetailExercise({ ex, isLeg })}
+            />
+          );
+        })}
       </div>
 
       <button className="start-btn" onClick={handleStartClick} disabled={!ready}>
@@ -134,6 +141,14 @@ export function HomeScreen({
           onInstall={handleModalInstall}
           onContinue={handleModalContinue}
           onClose={() => setShowModal(false)}
+        />
+      )}
+
+      {detailExercise && (
+        <ExerciseDetailModal
+          exercise={detailExercise.ex}
+          isLeg={detailExercise.isLeg}
+          onClose={() => setDetailExercise(null)}
         />
       )}
     </div>
