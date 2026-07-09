@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import { useWorkoutSession } from './hooks/useWorkoutSession';
 import { useWorkoutHistory } from './hooks/useWorkoutHistory';
+import { usePWA } from './hooks/usePWA';
 import { unlockAudio } from './lib/audio';
 import { today } from './lib/session';
 import { HomeScreen } from './components/screens/HomeScreen';
@@ -15,6 +16,7 @@ export default function App() {
 
   const { session, routeName, ready, regen, focus, duration, setFocus, setDuration } = useWorkoutSession();
   const { records, addRecord } = useWorkoutHistory();
+  const { showInstall, promptReady, ios, install, dismissInstall, needRefresh, updateServiceWorker } = usePWA();
 
   const handleStart = useCallback(() => {
     unlockAudio();
@@ -52,6 +54,13 @@ export default function App() {
           duration={duration}
           onFocusChange={setFocus}
           onDurationChange={setDuration}
+          showInstall={showInstall}
+          promptReady={promptReady}
+          isIOS={ios}
+          onInstall={install}
+          onDismissInstall={dismissInstall}
+          needRefresh={needRefresh}
+          onUpdate={() => updateServiceWorker(true)}
         />
       )}
       {view === 'player' && session && (

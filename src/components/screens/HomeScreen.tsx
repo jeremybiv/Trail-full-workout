@@ -1,7 +1,10 @@
+import { useCallback, useRef, useState } from 'react';
 import type { Session } from '../../lib/session';
 import { ALL } from '../../data/exercises';
 import { dateLabel } from '../../lib/format';
 import { ExerciseCard } from '../ExerciseCard';
+import { InstallBanner } from '../InstallBanner';
+import { InstallModal } from '../InstallModal';
 
 interface Props {
   session: Session | null;
@@ -13,10 +16,46 @@ interface Props {
   duration: 'short' | 'long';
   onFocusChange: (f: 'upper' | 'lower') => void;
   onDurationChange: (d: 'short' | 'long') => void;
+  showInstall: boolean;
+  promptReady: boolean;
+  isIOS: boolean;
+  onInstall: () => void;
+  onDismissInstall: () => void;
+  needRefresh: boolean;
+  onUpdate: () => void;
 }
 
-export function HomeScreen({ session, routeName, ready, onRegen, onStart, focus, duration, onFocusChange, onDurationChange }: Props) {
+export function HomeScreen({
+  session, routeName, ready, onRegen, onStart,
+  focus, duration, onFocusChange, onDurationChange,
+  showInstall, promptReady, isIOS, onInstall, onDismissInstall,
+  needRefresh, onUpdate,
+}: Props) {
   const exercises = session ? session.ids.map((id) => ALL[id]) : [];
+  const [showModal, setShowModal] = useState(false);
+  const modalShown = useRef(false);
+
+  const handleStartClick = useCallback(() => {
+    if (showInstall && !modalShown.current) {
+      modalShown.current = true;
+      setShowModal(true);
+    } else {
+      onStart();
+    }
+  }, [showInstall, onStart]);
+
+  const handleModalInstall = useCallback(() => {
+    onInstall();
+    setShowModal(false);
+    // On Android the native prompt takes over; don't start simultaneously.
+    // On iOS there's no native prompt so we proceed to the workout.
+    if (isIOS) onStart();
+  }, [onInstall, isIOS, onStart]);
+
+  const handleModalContinue = useCallback(() => {
+    setShowModal(false);
+    onStart();
+  }, [onStart]);
 
   return (
     <div className="home">
@@ -27,6 +66,14 @@ export function HomeScreen({ session, routeName, ready, onRegen, onStart, focus,
           <button className="regen-btn" onClick={onRegen} title="Changer les exercices">🎲</button>
         </div>
       </div>
+
+      <InstallBanner
+        show={showInstall}
+        promptReady={promptReady}
+        isIOS={isIOS}
+        onInstall={onInstall}
+        onDismiss={onDismissInstall}
+      />
 
       <div className="opt-row">
         <div className="opt-group">
@@ -69,9 +116,26 @@ export function HomeScreen({ session, routeName, ready, onRegen, onStart, focus,
         ))}
       </div>
 
-      <button className="start-btn" onClick={onStart} disabled={!ready}>
+      <button className="start-btn" onClick={handleStartClick} disabled={!ready}>
         ▶ START
       </button>
+
+      {needRefresh && (
+        <div className="update-banner">
+          Nouvelle version disponible
+          <button className="update-btn" onClick={onUpdate}>Mettre à jour</button>
+        </div>
+      )}
+
+      {showModal && (
+        <InstallModal
+          promptReady={promptReady}
+          isIOS={isIOS}
+          onInstall={handleModalInstall}
+          onContinue={handleModalContinue}
+          onClose={() => setShowModal(false)}
+        />
+      )}
     </div>
   );
 }
