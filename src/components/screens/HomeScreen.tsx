@@ -2,6 +2,7 @@ import type { Session } from '../../lib/session';
 import { ALL } from '../../data/exercises';
 import { dateLabel } from '../../lib/format';
 import { ExerciseCard } from '../ExerciseCard';
+import { InstallBanner } from '../InstallBanner';
 
 interface Props {
   session: Session | null;
@@ -13,9 +14,19 @@ interface Props {
   duration: 'short' | 'long';
   onFocusChange: (f: 'upper' | 'lower') => void;
   onDurationChange: (d: 'short' | 'long') => void;
+  canInstall: boolean;
+  isIOSInstallable: boolean;
+  onInstall: () => void;
+  needRefresh: boolean;
+  onUpdate: () => void;
 }
 
-export function HomeScreen({ session, routeName, ready, onRegen, onStart, focus, duration, onFocusChange, onDurationChange }: Props) {
+export function HomeScreen({
+  session, routeName, ready, onRegen, onStart,
+  focus, duration, onFocusChange, onDurationChange,
+  canInstall, isIOSInstallable, onInstall,
+  needRefresh, onUpdate,
+}: Props) {
   const exercises = session ? session.ids.map((id) => ALL[id]) : [];
 
   return (
@@ -72,6 +83,15 @@ export function HomeScreen({ session, routeName, ready, onRegen, onStart, focus,
       <button className="start-btn" onClick={onStart} disabled={!ready}>
         ▶ START
       </button>
+
+      <InstallBanner canInstall={canInstall} isIOS={isIOSInstallable} onInstall={onInstall} />
+
+      {needRefresh && (
+        <div className="update-banner">
+          Nouvelle version disponible
+          <button className="update-btn" onClick={onUpdate}>Mettre à jour</button>
+        </div>
+      )}
     </div>
   );
 }
