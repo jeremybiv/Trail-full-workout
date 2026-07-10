@@ -1,0 +1,26 @@
+pike         Pike push-ups                  -> Pike Push-Up
+sideplank    Gainage latéral                -> Side Plank
+bicycle      Crunchs vélo                   -> Bicycle Crunch
+shouldertap  Shoulder taps                  -> Shoulder Taps
+splitcrunch  Split Crunch                   -> Split Crunch
+splanrot     Rotation gainage latéral       -> Side Plank Rotation
+swimmer      Swimmers                       -> Swimmers
+birddog      Plank Bird-Dog                 -> Bird Dog
+rlunge       Fentes arrière                 -> Reverse Lunge
+calf         Extensions mollets             -> Calf Raise
+wallsit      Chaise                         -> Wall Sit
+lswing       Balancés latéraux              -> Lateral Leg Swing
+swingdrive   Swing drives                   -> Swing Drive
+pogo         Pogo Jumps                     -> Pogo Jump
+highknee     Genoux hauts                   -> High Knees
+buttkick     Talons-fesses                  -> Butt Kicks
+dynowalk     Dyno Walks                     -> Lateral Lunge Walk
+askip        A-Skips                        -> A-Skip
+cskip        C-Skips                        -> C-Skip
+clamshell    Coquillages debout             -> Standing Clamshell
+janefonda    Jane Fonda debout              -> Standing Hip Abduction
+hamslide     Ischio-jambiers excentriques   -> Eccentric Hamstring Slider
+pulsesquat   Pulse Squats                   -> Pulse Squat
+pulselunge   Pulse Fentes                   -> Pulse Lunge
+lungewall    Fente + Drive mur              -> Lunge to Wall Drive
+runjump      Runner Jump                    -> undefined
