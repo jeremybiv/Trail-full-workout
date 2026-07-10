@@ -16,7 +16,7 @@ export default function App() {
   const [doneDuration, setDoneDuration] = useState(0);
   const [showHistory, setShowHistory] = useState(false);
 
-  const { session, routeName, ready, regen, focus, duration, setFocus, setDuration } = useWorkoutSession();
+  const { session, routeName, ready, regen, focus, duration, difficulty, setFocus, setDuration, setDifficulty } = useWorkoutSession();
   const { records, addRecord, streak, bestStreak, totalSessions, totalMinutes } = useWorkoutHistory();
   const { showInstall, promptReady, ios, install, dismissInstall, needRefresh, updateServiceWorker } = usePWA();
 
@@ -65,6 +65,8 @@ export default function App() {
           onUpdate={() => updateServiceWorker(true)}
           streak={streak}
           onOpenHistory={() => setShowHistory(true)}
+          difficulty={difficulty}
+          onDifficultyChange={setDifficulty}
         />
       )}
       {view === 'player' && session && (
