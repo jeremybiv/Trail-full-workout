@@ -1240,6 +1240,17 @@ button {
   font-size: 0.82rem;
   color: var(--gold);
 }
+.update-banner--global {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 480px;
+  margin: 0;
+  z-index: 9999;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
 .update-btn {
   background: var(--gold);
   color: #1c2620;
