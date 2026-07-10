@@ -25,13 +25,15 @@ interface Props {
   onDismissInstall: () => void;
   needRefresh: boolean;
   onUpdate: () => void;
+  streak: number;
+  onOpenHistory: () => void;
 }
 
 export function HomeScreen({
   session, routeName, ready, onRegen, onStart,
   focus, duration, onFocusChange, onDurationChange,
   showInstall, promptReady, isIOS, onInstall, onDismissInstall,
-  needRefresh, onUpdate,
+  needRefresh, onUpdate, streak, onOpenHistory,
 }: Props) {
   const exercises = session ? session.ids.map((id) => ALL[id]) : [];
   const [showModal, setShowModal] = useState(false);
@@ -63,7 +65,13 @@ export function HomeScreen({
   return (
     <div className="home">
       <div className="hdr">
-        <p className="eyebrow">{dateLabel()}</p>
+        <div className="hdr-top">
+          <p className="eyebrow">{dateLabel()}</p>
+          <div className="hdr-actions">
+            {streak > 0 && <span className="streak-badge">🔥 {streak}</span>}
+            <button className="history-btn" onClick={onOpenHistory} title="Mon historique">📋</button>
+          </div>
+        </div>
         <div className="hdr-row">
           <h1 className="route">{routeName || 'Renfo du jour'}</h1>
           <button className="regen-btn" onClick={onRegen} title="Changer les exercices">🎲</button>

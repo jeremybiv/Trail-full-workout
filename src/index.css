@@ -78,6 +78,41 @@ button {
   letter-spacing: 0.04em;
 }
 
+.hdr-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2px;
+}
+
+.hdr-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.streak-badge {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ff8c00;
+  background: rgba(255, 140, 0, 0.12);
+  border: 1px solid rgba(255, 140, 0, 0.3);
+  border-radius: 99px;
+  padding: 3px 10px;
+}
+
+.history-btn {
+  font-size: 18px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: var(--surf);
+  border: 1px solid var(--line);
+}
+
 .hdr-row {
   display: flex;
   align-items: center;
@@ -664,29 +699,55 @@ button {
   z-index: 110;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   text-align: center;
-  padding: 24px;
+  padding: 32px 24px max(24px, env(safe-area-inset-bottom));
+  overflow-y: auto;
 }
 
 .done.open {
   display: flex;
 }
 
-.done h1 {
+.done-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.done-emoji {
+  font-size: 56px;
+  line-height: 1;
+  margin-bottom: 12px;
+}
+
+.done-title {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 38px;
-  margin: 10px 0 6px;
+  margin: 0 0 4px;
   letter-spacing: 0.03em;
+}
+
+.done-sub {
+  font-size: 0.88rem;
+  color: var(--dim);
+  margin: 0;
+}
+
+.done-best-streak {
+  font-size: 12px;
+  color: var(--dim);
+  margin: -12px 0 20px;
 }
 
 .done-stats {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
-  margin: 16px 0 28px;
+  margin: 0 0 24px;
   width: 100%;
-  max-width: 280px;
+  max-width: 320px;
 }
 
 .stat-box {
@@ -714,10 +775,18 @@ button {
   display: block;
 }
 
+.stat-box.accent {
+  border-color: rgba(255, 140, 0, 0.4);
+  background: rgba(255, 140, 0, 0.08);
+}
+.stat-box.accent .stat-val {
+  color: #ff8c00;
+}
+
 .history-list {
   width: 100%;
   max-width: 320px;
-  margin: 4px 0 20px;
+  margin: 0 0 20px;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -845,6 +914,63 @@ button {
   cursor: pointer;
   padding: 4px;
   line-height: 1;
+}
+
+/* ── HISTORY MODAL ── */
+.history-modal-sheet {
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  padding-bottom: max(24px, env(safe-area-inset-bottom));
+}
+
+.history-modal-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 0 0 20px;
+}
+
+.hstat-box {
+  background: var(--surf2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px;
+  text-align: center;
+}
+
+.hstat-val {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  line-height: 1;
+  color: var(--ink);
+  display: block;
+}
+
+.hstat-lbl {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: var(--dim);
+  margin-top: 3px;
+  display: block;
+}
+
+.history-modal-list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-right: 2px;
+}
+
+.history-empty {
+  text-align: center;
+  color: var(--dim);
+  font-size: 0.9rem;
+  padding: 24px 0;
 }
 
 /* ── EXERCISE CARD INTERACTIVE ── */
