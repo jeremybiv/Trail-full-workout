@@ -27,6 +27,7 @@ interface Props {
   onUpdate: () => void;
   streak: number;
   onOpenHistory: () => void;
+  onOpenProfile: () => void;
   difficulty: Difficulty;
   onDifficultyChange: (d: Difficulty) => void;
 }
@@ -41,7 +42,7 @@ export function HomeScreen({
   session, routeName, ready, onRegen, onStart,
   focus, duration, onFocusChange, onDurationChange,
   showInstall, promptReady, isIOS, onInstall, onDismissInstall,
-  needRefresh, onUpdate, streak, onOpenHistory,
+  needRefresh, onUpdate, streak, onOpenHistory, onOpenProfile,
   difficulty, onDifficultyChange,
 }: Props) {
   const exercises = session ? session.ids.map((id) => ALL[id]) : [];
@@ -79,6 +80,7 @@ export function HomeScreen({
           <div className="hdr-actions">
             {streak > 0 && <span className="streak-badge">🔥 {streak}</span>}
             <button className="history-btn" onClick={onOpenHistory} title="Mon historique">📋</button>
+            <button className="profile-btn" onClick={onOpenProfile} title="Mon profil">👤</button>
           </div>
         </div>
         <div className="hdr-row">

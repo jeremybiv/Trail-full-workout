@@ -1,6 +1,8 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useWorkoutSession } from './hooks/useWorkoutSession';
 import { useWorkoutHistory } from './hooks/useWorkoutHistory';
+import { useProfile } from './hooks/useProfile';
+import { useNotifications } from './hooks/useNotifications';
 import { usePWA } from './hooks/usePWA';
 import { unlockAudio } from './lib/audio';
 import { today } from './lib/session';
@@ -8,6 +10,7 @@ import { HomeScreen } from './components/screens/HomeScreen';
 import { PlayerScreen } from './components/screens/PlayerScreen';
 import { DoneScreen } from './components/screens/DoneScreen';
 import { HistoryModal } from './components/HistoryModal';
+import { ProfileModal } from './components/ProfileModal';
 
 type View = 'home' | 'player' | 'done';
 
@@ -15,10 +18,18 @@ export default function App() {
   const [view, setView] = useState<View>('home');
   const [doneDuration, setDoneDuration] = useState(0);
   const [showHistory, setShowHistory] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
 
   const { session, routeName, ready, regen, focus, duration, difficulty, setFocus, setDuration, setDifficulty } = useWorkoutSession();
   const { records, addRecord, streak, bestStreak, totalSessions, totalMinutes } = useWorkoutHistory();
+  const { prefs, updatePrefs } = useProfile();
+  const { permission, requestPermission, updateSubscription, unsubscribe } = useNotifications(prefs, records);
   const { showInstall, promptReady, ios, install, dismissInstall, needRefresh, updateServiceWorker } = usePWA();
+
+  // Sync subscription when prefs change
+  useEffect(() => {
+    if (prefs) void updateSubscription(prefs);
+  }, [prefs, updateSubscription]);
 
   const handleStart = useCallback(() => {
     unlockAudio();
@@ -65,6 +76,7 @@ export default function App() {
           onUpdate={() => updateServiceWorker(true)}
           streak={streak}
           onOpenHistory={() => setShowHistory(true)}
+          onOpenProfile={() => setShowProfile(true)}
           difficulty={difficulty}
           onDifficultyChange={setDifficulty}
         />
@@ -95,6 +107,18 @@ export default function App() {
           totalSessions={totalSessions}
           totalMinutes={totalMinutes}
           onClose={() => setShowHistory(false)}
+        />
+      )}
+      {showProfile && prefs && (
+        <ProfileModal
+          prefs={prefs}
+          permission={permission}
+          streak={streak}
+          totalSessions={totalSessions}
+          onUpdate={updatePrefs}
+          onRequestPermission={requestPermission}
+          onUnsubscribe={() => unsubscribe(prefs.deviceId)}
+          onClose={() => setShowProfile(false)}
         />
       )}
     </>
