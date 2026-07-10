@@ -72,14 +72,20 @@ export default function App() {
           isIOS={ios}
           onInstall={install}
           onDismissInstall={dismissInstall}
-          needRefresh={needRefresh}
-          onUpdate={() => updateServiceWorker(true)}
           streak={streak}
           onOpenHistory={() => setShowHistory(true)}
           onOpenProfile={() => setShowProfile(true)}
           difficulty={difficulty}
           onDifficultyChange={setDifficulty}
         />
+      )}
+      {needRefresh && (
+        <div className="update-banner update-banner--global">
+          Nouvelle version disponible
+          <button className="update-btn" onClick={() => updateServiceWorker(true)}>
+            Mettre à jour
+          </button>
+        </div>
       )}
       {view === 'player' && session && (
         <PlayerScreen

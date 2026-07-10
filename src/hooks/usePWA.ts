@@ -37,7 +37,12 @@ export function usePWA() {
   const {
     needRefresh: [needRefresh],
     updateServiceWorker,
-  } = useRegisterSW();
+  } = useRegisterSW({
+    onRegisteredSW(_swUrl, r) {
+      if (!r) return
+      setInterval(() => r.update(), 60 * 60 * 1000)
+    },
+  });
 
   useEffect(() => {
     if (isInStandaloneMode()) {

@@ -23,8 +23,6 @@ interface Props {
   isIOS: boolean;
   onInstall: () => void;
   onDismissInstall: () => void;
-  needRefresh: boolean;
-  onUpdate: () => void;
   streak: number;
   onOpenHistory: () => void;
   onOpenProfile: () => void;
@@ -42,7 +40,7 @@ export function HomeScreen({
   session, routeName, ready, onRegen, onStart,
   focus, duration, onFocusChange, onDurationChange,
   showInstall, promptReady, isIOS, onInstall, onDismissInstall,
-  needRefresh, onUpdate, streak, onOpenHistory, onOpenProfile,
+  streak, onOpenHistory, onOpenProfile,
   difficulty, onDifficultyChange,
 }: Props) {
   const exercises = session ? session.ids.map((id) => ALL[id]) : [];
@@ -157,13 +155,6 @@ export function HomeScreen({
       <button className="start-btn" onClick={handleStartClick} disabled={!ready}>
         ▶ START
       </button>
-
-      {needRefresh && (
-        <div className="update-banner">
-          Nouvelle version disponible
-          <button className="update-btn" onClick={onUpdate}>Mettre à jour</button>
-        </div>
-      )}
 
       {showModal && (
         <InstallModal
