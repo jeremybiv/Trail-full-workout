@@ -21,15 +21,20 @@ export function ExerciseCard({ exercise, isLeg, onClick }: Props) {
       </div>
       <div className="ex-info">
         <p className="ex-name">{NAME_FR[exercise.id]}</p>
-        <p className="ex-tag">
-          {isLeg ? (
-            <><span className="dice">🎲</span> Jambes — tirage du jour</>
-          ) : exercise.hold ? (
-            'Maintien'
-          ) : (
-            'Haut du corps / Abdos'
-          )}
-        </p>
+        <div className="ex-card-footer">
+          <p className="ex-tag">
+            {isLeg ? (
+              <><span className="dice">🎲</span> Jambes — tirage du jour</>
+            ) : exercise.hold ? (
+              'Maintien'
+            ) : (
+              'Haut du corps / Abdos'
+            )}
+          </p>
+          <span className={`ex-level lv${exercise.level}`}>
+            {'●'.repeat(exercise.level)}{'○'.repeat(3 - exercise.level)}
+          </span>
+        </div>
       </div>
     </div>
   );

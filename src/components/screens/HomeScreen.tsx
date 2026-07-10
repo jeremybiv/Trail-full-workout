@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from 'react';
-import type { Session } from '../../lib/session';
+import type { Session, Difficulty } from '../../lib/session';
 import type { Exercise } from '../../data/exercises';
 import { ALL } from '../../data/exercises';
 import { dateLabel } from '../../lib/format';
@@ -25,13 +25,25 @@ interface Props {
   onDismissInstall: () => void;
   needRefresh: boolean;
   onUpdate: () => void;
+  streak: number;
+  onOpenHistory: () => void;
+  onOpenProfile: () => void;
+  difficulty: Difficulty;
+  onDifficultyChange: (d: Difficulty) => void;
 }
+
+const DIFF_LABELS: Record<Difficulty, string> = {
+  deb: '🟢 Débutant',
+  int: '🔵 Intermédiaire',
+  conf: '🔴 Confirmé',
+};
 
 export function HomeScreen({
   session, routeName, ready, onRegen, onStart,
   focus, duration, onFocusChange, onDurationChange,
   showInstall, promptReady, isIOS, onInstall, onDismissInstall,
-  needRefresh, onUpdate,
+  needRefresh, onUpdate, streak, onOpenHistory, onOpenProfile,
+  difficulty, onDifficultyChange,
 }: Props) {
   const exercises = session ? session.ids.map((id) => ALL[id]) : [];
   const [showModal, setShowModal] = useState(false);
@@ -63,7 +75,14 @@ export function HomeScreen({
   return (
     <div className="home">
       <div className="hdr">
-        <p className="eyebrow">{dateLabel()}</p>
+        <div className="hdr-top">
+          <p className="eyebrow">{dateLabel()}</p>
+          <div className="hdr-actions">
+            {streak > 0 && <span className="streak-badge">🔥 {streak}</span>}
+            <button className="history-btn" onClick={onOpenHistory} title="Mon historique">📋</button>
+            <button className="profile-btn" onClick={onOpenProfile} title="Mon profil">👤</button>
+          </div>
+        </div>
         <div className="hdr-row">
           <h1 className="route">{routeName || 'Renfo du jour'}</h1>
           <button className="regen-btn" onClick={onRegen} title="Changer les exercices">🎲</button>
@@ -101,6 +120,18 @@ export function HomeScreen({
             </button>
           ))}
         </div>
+      </div>
+
+      <div className="opt-row diff-row">
+        {(['deb', 'int', 'conf'] as const).map((d) => (
+          <button
+            key={d}
+            className={`opt-pill diff-pill${difficulty === d ? ' active' : ''}`}
+            onClick={() => onDifficultyChange(d)}
+          >
+            {DIFF_LABELS[d]}
+          </button>
+        ))}
       </div>
 
       <div className="workout-meta">

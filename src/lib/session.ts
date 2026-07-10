@@ -4,12 +4,15 @@ import { NAME_FR } from '../data/exerciseNamesFr';
 import { ROUNDS, ROUNDS_LONG, PREP_DUR } from '../data/constants';
 import { hash, rng32, shuffle } from './rng';
 
+export type Difficulty = 'deb' | 'int' | 'conf';
+
 export interface Session {
   ids: string[];
   legIds: string[];
   seed: string;
   focus: 'upper' | 'lower';
   duration: 'short' | 'long';
+  difficulty: Difficulty;
 }
 
 export type StepKind = 'prep' | 'work' | 'rest' | 'gap';
@@ -36,29 +39,38 @@ export function buildSession(seed: string, opts?: {
   legIds?: string[];
   focus?: 'upper' | 'lower';
   duration?: 'short' | 'long';
+  difficulty?: Difficulty;
 }): Session {
   const focus = opts?.focus ?? 'upper';
   const duration = opts?.duration ?? 'short';
+  const difficulty = opts?.difficulty ?? 'int';
   const rng = rng32(hash(seed));
 
+  const upPool = difficulty === 'deb' ? UP.filter((e) => e.level <= 2)
+               : difficulty === 'conf' ? UP.filter((e) => e.level >= 2)
+               : UP;
+  const lgPool = difficulty === 'deb' ? LG.filter((e) => e.level <= 2)
+               : difficulty === 'conf' ? LG.filter((e) => e.level >= 2)
+               : LG;
+
   if (focus === 'lower') {
-    const legs = opts?.legIds ? opts.legIds.map((id) => ALL[id]) : shuffle(LG, rng).slice(0, 6);
-    const upper = shuffle(UP, rng).slice(0, 2);
+    const legs = opts?.legIds ? opts.legIds.map((id) => ALL[id]) : shuffle(lgPool, rng).slice(0, 6);
+    const upper = shuffle(upPool, rng).slice(0, 2);
     const order = [
       legs[0], legs[1], upper[0],
       legs[2], legs[3], upper[1],
       legs[4], legs[5],
     ] as Exercise[];
-    return { ids: order.map((e) => e.id), legIds: legs.map((e) => e.id), seed, focus, duration };
+    return { ids: order.map((e) => e.id), legIds: legs.map((e) => e.id), seed, focus, duration, difficulty };
   } else {
-    const upper = shuffle(UP, rng).slice(0, 6);
-    const legs = opts?.legIds ? opts.legIds.map((id) => ALL[id]) : shuffle(LG, rng).slice(0, 2);
+    const upper = shuffle(upPool, rng).slice(0, 6);
+    const legs = opts?.legIds ? opts.legIds.map((id) => ALL[id]) : shuffle(lgPool, rng).slice(0, 2);
     const order = [
       upper[0], upper[1], legs[0],
       upper[2], upper[3], legs[1],
       upper[4], upper[5],
     ] as Exercise[];
-    return { ids: order.map((e) => e.id), legIds: legs.map((e) => e.id), seed, focus, duration };
+    return { ids: order.map((e) => e.id), legIds: legs.map((e) => e.id), seed, focus, duration, difficulty };
   }
 }
 
