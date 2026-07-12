@@ -24,7 +24,7 @@ export default function App() {
   const { records, addRecord, streak, bestStreak, totalSessions, totalMinutes } = useWorkoutHistory();
   const { prefs, updatePrefs } = useProfile();
   const { permission, requestPermission, updateSubscription, unsubscribe } = useNotifications(prefs, records);
-  const { showInstall, promptReady, ios, install, dismissInstall, needRefresh, updateServiceWorker } = usePWA();
+  const { showInstall, promptReady, ios, install, dismissInstall } = usePWA();
 
   // Sync subscription when prefs change
   useEffect(() => {
@@ -78,14 +78,6 @@ export default function App() {
           difficulty={difficulty}
           onDifficultyChange={setDifficulty}
         />
-      )}
-      {needRefresh && (
-        <div className="update-banner update-banner--global">
-          Nouvelle version disponible
-          <button className="update-btn" onClick={() => updateServiceWorker(true)}>
-            Mettre à jour
-          </button>
-        </div>
       )}
       {view === 'player' && session && (
         <PlayerScreen
