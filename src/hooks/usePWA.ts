@@ -34,10 +34,7 @@ export function usePWA() {
 
   const ios = isIOSSafari();
 
-  const {
-    needRefresh: [needRefresh],
-    updateServiceWorker,
-  } = useRegisterSW({
+  useRegisterSW({
     onRegisteredSW(_swUrl, r) {
       if (!r) return
       setInterval(() => r.update(), 60 * 60 * 1000)
@@ -85,5 +82,5 @@ export function usePWA() {
     setDismissed(true);
   }
 
-  return { showInstall, promptReady, ios, install, dismissInstall, needRefresh, updateServiceWorker };
+  return { showInstall, promptReady, ios, install, dismissInstall };
 }
