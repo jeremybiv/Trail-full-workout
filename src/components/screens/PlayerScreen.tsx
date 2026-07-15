@@ -124,7 +124,13 @@ export function PlayerScreen({ session, onQuit, onDone }: Props) {
 
   const mediaBlock = (
     <>
-      <PlayerMedia step={step} nextStep={nextStep} paused={paused} />
+      {step?.type === 'work' && exercise?.video ? (
+        <div className="player-video-hero">
+          <ExerciseVideo url={exercise.video} autoPlay />
+        </div>
+      ) : (
+        <PlayerMedia step={step} nextStep={nextStep} paused={paused} />
+      )}
 
       {step?.type === 'rest' && nextStep?.id && (
         <p className="next-eyebrow">Prochain exercice</p>
@@ -147,11 +153,6 @@ export function PlayerScreen({ session, onQuit, onDone }: Props) {
             ? 'Installe-toi, ça commence…'
             : (exercise?.desc ?? '')}
         </p>
-      )}
-      {step?.type === 'work' && exercise?.video && (
-        <div className="video-section player-video">
-          <ExerciseVideo url={exercise.video} compact />
-        </div>
       )}
     </>
   );

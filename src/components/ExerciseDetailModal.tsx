@@ -21,22 +21,21 @@ export function ExerciseDetailModal({ exercise, isLeg, onClose }: Props) {
       <div className="modal-sheet ex-detail-sheet" onClick={(e) => e.stopPropagation()}>
         <button className="modal-close" onClick={onClose}>✕</button>
 
-        <div className={`ex-detail-media${isLeg ? ' leg' : ''}`}>
-          <ExerciseMedia exercise={exercise} variant="player" />
-        </div>
+        {exercise.video ? (
+          <div className="ex-detail-video">
+            <ExerciseVideo url={exercise.video} autoPlay />
+          </div>
+        ) : (
+          <div className={`ex-detail-media${isLeg ? ' leg' : ''}`}>
+            <ExerciseMedia exercise={exercise} variant="player" />
+          </div>
+        )}
 
         <div className="ex-detail-info">
           <p className={`ex-detail-tag${isLeg ? ' leg' : ''}`}>{tag}</p>
           <h2 className="ex-detail-name">{NAME_FR[exercise.id]}</h2>
           <p className="ex-detail-desc">{exercise.desc}</p>
         </div>
-
-        {exercise.video && (
-          <div className="video-section">
-            <p className="video-label">Démonstration</p>
-            <ExerciseVideo url={exercise.video} />
-          </div>
-        )}
       </div>
     </div>
   );

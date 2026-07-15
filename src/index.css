@@ -1390,18 +1390,6 @@ button {
 }
 
 /* ── Video ── */
-.video-section {
-  width: 100%;
-  margin-top: 1.25rem;
-}
-.video-label {
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--dim);
-  margin-bottom: 0.5rem;
-}
 .video-player {
   width: 100%;
   aspect-ratio: 16 / 9;
@@ -1409,14 +1397,25 @@ button {
   display: block;
   background: #000;
 }
-.video-player.compact {
-  border-radius: 8px;
+
+/* Hero vidéo dans le player (remplace le cercle .pmedia) */
+.player-video-hero {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  flex: none;
 }
-.player-video {
-  max-width: 340px;
-  margin-inline: auto;
+.player-video-hero .video-player {
+  border-radius: 14px;
 }
-.ex-detail-sheet .video-section {
-  padding: 0 24px max(28px, env(safe-area-inset-bottom));
-  margin-top: -8px;
+
+/* Vidéo dans le modal de détail (remplace ex-detail-media) */
+.ex-detail-video {
+  width: 100%;
+}
+.ex-detail-video .video-player {
+  border-radius: 0;
+  aspect-ratio: 16 / 9;
 }

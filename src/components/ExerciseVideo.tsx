@@ -1,17 +1,18 @@
 interface Props {
   url: string;
-  compact?: boolean;
+  autoPlay?: boolean;
 }
 
-export function ExerciseVideo({ url, compact }: Props) {
+export function ExerciseVideo({ url, autoPlay }: Props) {
   return (
     <video
       src={url}
-      className={`video-player${compact ? ' compact' : ''}`}
+      className="video-player"
       controls
       loop
       playsInline
       preload="metadata"
+      {...(autoPlay ? { autoPlay: true, muted: true } : {})}
     />
   );
 }
