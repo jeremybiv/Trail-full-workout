@@ -6,6 +6,7 @@ import { useWakeLock } from '../../hooks/useWakeLock';
 import type { Session } from '../../lib/session';
 import { buildTimeline, nextWorkName, nextWorkStep } from '../../lib/session';
 import { PlayerMedia } from '../PlayerMedia';
+import { ExerciseVideo } from '../ExerciseVideo';
 
 interface Props {
   session: Session;
@@ -123,7 +124,13 @@ export function PlayerScreen({ session, onQuit, onDone }: Props) {
 
   const mediaBlock = (
     <>
-      <PlayerMedia step={step} nextStep={nextStep} paused={paused} />
+      {step?.type === 'work' && exercise?.video ? (
+        <div className="player-video-hero">
+          <ExerciseVideo url={exercise.video} autoPlay />
+        </div>
+      ) : (
+        <PlayerMedia step={step} nextStep={nextStep} paused={paused} />
+      )}
 
       {step?.type === 'rest' && nextStep?.id && (
         <p className="next-eyebrow">Prochain exercice</p>
