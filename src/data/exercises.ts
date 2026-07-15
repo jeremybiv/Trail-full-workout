@@ -8,6 +8,7 @@ export interface Exercise {
   hold?: true;
   unilateral?: true;
   photo?: true;
+  video?: string;
 }
 
 export const UP: Exercise[] = [
@@ -15,7 +16,7 @@ export const UP: Exercise[] = [
   { id: 'diamond',     m: 'press', desc: 'Mains en losange, focus triceps.', level: 3, photo: true },
   { id: 'decline',     m: 'press', desc: 'Pieds sur une marche, focus épaules.', level: 3, photo: true },
   { id: 'dips',        m: 'press', desc: 'Mains en bord de chaise, fléchis-pousse.', level: 3, photo: true },
-  { id: 'pike',        m: 'press', desc: 'Fessiers hauts, pompe quasi-verticale.', level: 3, photo: true },
+  { id: 'pike',        m: 'press', desc: 'Fessiers hauts, pompe quasi-verticale.', level: 3, photo: true, video: 'https://share.gemini.google/HgmS7j4QN0ap' },
   { id: 'plank',       m: 'plank', desc: 'Tête-talons alignés, respire lentement.', level: 1, hold: true, photo: true },
   { id: 'sideplank',   m: 'plank', desc: 'Avant-bras, hanches hautes.', level: 2, hold: true, unilateral: true, photo: true },
   { id: 'mountain',    m: 'cdyn',  desc: 'Genoux vers la poitrine, rythme soutenu.', level: 2, photo: true },

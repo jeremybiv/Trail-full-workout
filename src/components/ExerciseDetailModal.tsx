@@ -1,6 +1,7 @@
 import type { Exercise } from '../data/exercises';
 import { NAME_FR } from '../data/exerciseNamesFr';
 import { ExerciseMedia } from './ExerciseMedia';
+import { ExerciseVideo } from './ExerciseVideo';
 
 interface Props {
   exercise: Exercise;
@@ -29,6 +30,13 @@ export function ExerciseDetailModal({ exercise, isLeg, onClose }: Props) {
           <h2 className="ex-detail-name">{NAME_FR[exercise.id]}</h2>
           <p className="ex-detail-desc">{exercise.desc}</p>
         </div>
+
+        {exercise.video && (
+          <div className="video-section">
+            <p className="video-label">Démonstration</p>
+            <ExerciseVideo url={exercise.video} />
+          </div>
+        )}
       </div>
     </div>
   );

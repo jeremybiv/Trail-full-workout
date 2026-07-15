@@ -1388,3 +1388,46 @@ button {
 .notif-cta {
   margin-top: 4px;
 }
+
+/* ── Video embed ────────────────────────────────── */
+.video-section {
+  width: 100%;
+  margin-top: 1.25rem;
+}
+.video-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+.video-iframe {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: none;
+  border-radius: 10px;
+  display: block;
+  background: var(--surf2);
+}
+.video-iframe.compact {
+  border-radius: 8px;
+}
+.player-video {
+  max-width: 340px;
+  margin-inline: auto;
+}
+.video-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.55rem 1.1rem;
+  border-radius: 10px;
+  background: var(--surf2);
+  color: var(--blaze);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+.video-link:hover { opacity: 0.8; }

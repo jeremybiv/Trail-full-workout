@@ -6,6 +6,7 @@ import { useWakeLock } from '../../hooks/useWakeLock';
 import type { Session } from '../../lib/session';
 import { buildTimeline, nextWorkName, nextWorkStep } from '../../lib/session';
 import { PlayerMedia } from '../PlayerMedia';
+import { ExerciseVideo } from '../ExerciseVideo';
 
 interface Props {
   session: Session;
@@ -146,6 +147,11 @@ export function PlayerScreen({ session, onQuit, onDone }: Props) {
             ? 'Installe-toi, ça commence…'
             : (exercise?.desc ?? '')}
         </p>
+      )}
+      {step?.type === 'work' && exercise?.video && (
+        <div className="video-section player-video">
+          <ExerciseVideo url={exercise.video} compact />
+        </div>
       )}
     </>
   );
