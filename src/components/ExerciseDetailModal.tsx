@@ -1,5 +1,5 @@
 import type { Exercise } from '../data/exercises';
-import { NAME_FR } from '../data/exerciseNamesFr';
+import { NAME_EN } from '../data/exerciseNamesEn';
 import { ExerciseMedia } from './ExerciseMedia';
 import { ExerciseVideo } from './ExerciseVideo';
 
@@ -33,7 +33,7 @@ export function ExerciseDetailModal({ exercise, isLeg, onClose }: Props) {
 
         <div className="ex-detail-info">
           <p className={`ex-detail-tag${isLeg ? ' leg' : ''}`}>{tag}</p>
-          <h2 className="ex-detail-name">{NAME_FR[exercise.id]}</h2>
+          <h2 className="ex-detail-name">{NAME_EN[exercise.id]}</h2>
           <p className="ex-detail-desc">{exercise.desc}</p>
         </div>
       </div>

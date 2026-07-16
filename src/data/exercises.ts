@@ -14,7 +14,7 @@ export interface Exercise {
 export const UP: Exercise[] = [
   { id: 'pushup',      m: 'press', desc: 'Mains sous les épaules, corps gainé.', level: 2, photo: true },
   { id: 'diamond',     m: 'press', desc: 'Mains en losange, focus triceps.', level: 3, photo: true },
-  { id: 'decline',     m: 'press', desc: 'Pieds sur une marche, focus épaules.', level: 3, photo: true },
+  { id: 'decline',     m: 'press', desc: 'Pieds sur une marche, focus épaules.', level: 3, photo: true, video: '/exercises/decline.mp4' },
   { id: 'dips',        m: 'press', desc: 'Mains en bord de chaise, fléchis-pousse.', level: 3, photo: true },
   { id: 'pike',        m: 'press', desc: 'Fessiers hauts, pompe quasi-verticale.', level: 3, photo: true, video: '/exercises/pike.mp4' },
   { id: 'plank',       m: 'plank', desc: 'Tête-talons alignés, respire lentement.', level: 1, hold: true, photo: true },
