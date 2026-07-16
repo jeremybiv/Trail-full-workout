@@ -1,5 +1,5 @@
 import type { Exercise } from '../data/exercises';
-import { NAME_FR } from '../data/exerciseNamesFr';
+import { NAME_EN } from '../data/exerciseNamesEn';
 import { ExerciseMedia } from './ExerciseMedia';
 
 interface Props {
@@ -20,7 +20,7 @@ export function ExerciseCard({ exercise, isLeg, onClick }: Props) {
         <ExerciseMedia exercise={exercise} variant="card" />
       </div>
       <div className="ex-info">
-        <p className="ex-name">{NAME_FR[exercise.id]}</p>
+        <p className="ex-name">{NAME_EN[exercise.id]}</p>
         <div className="ex-card-footer">
           <p className="ex-tag">
             {isLeg ? (
