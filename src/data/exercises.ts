@@ -54,7 +54,7 @@ export const LG: Exercise[] = [
   { id: 'monwalk',    m: 'squat', desc: 'Marche latérale en position basse, tension constante.', level: 2, photo: true },
   { id: 'hamslide',   m: 'squat', desc: 'Glissé au sol, descente lente, remontée contrôlée.', level: 2, photo: true },
   { id: 'pulsesquat', m: 'squat', desc: 'Squat bas, micro-pulsions sans remonter.', level: 2, photo: true },
-  { id: 'pulselunge', m: 'squat', desc: 'Fente basse, pulses en bas de la course.', level: 2, photo: true },
+  { id: 'pulselunge', m: 'squat', desc: 'Fente basse, pulses en bas de la course.', level: 2, photo: true, video: '/exercises/pulselunge.mp4' },
   { id: 'lungewall',  m: 'squat', desc: 'Fente arrière + drive genou vers le mur.', level: 3 },
   { id: 'runjump',    m: 'squat', desc: 'Saut unilatéral explosif, réception mono-appui.', level: 3, photo: true },
 ];
