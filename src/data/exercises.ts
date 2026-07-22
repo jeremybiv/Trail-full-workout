@@ -17,7 +17,7 @@ export const UP: Exercise[] = [
   { id: 'decline',     m: 'press', desc: 'Pieds sur une marche, focus épaules.', level: 3, photo: true, video: '/exercises/decline.mp4' },
   { id: 'dips',        m: 'press', desc: 'Mains en bord de chaise, fléchis-pousse.', level: 3, photo: true },
   { id: 'pike',        m: 'press', desc: 'Fessiers hauts, pompe quasi-verticale.', level: 3, photo: true, video: '/exercises/pike.mp4' },
-  { id: 'plank',       m: 'plank', desc: 'Tête-talons alignés, respire lentement.', level: 1, hold: true, photo: true },
+  { id: 'plank',       m: 'plank', desc: 'Tête-talons alignés, respire lentement.', level: 1, hold: true, photo: true, video: '/exercises/plank.mp4' },
   { id: 'sideplank',   m: 'plank', desc: 'Avant-bras, hanches hautes.', level: 2, hold: true, unilateral: true, photo: true },
   { id: 'mountain',    m: 'cdyn',  desc: 'Genoux vers la poitrine, rythme soutenu.', level: 2, photo: true, video: '/exercises/mountain.mp4' },
   { id: 'russian',     m: 'twist', desc: 'Buste incliné, rotation gauche-droite.', level: 2, photo: true },
