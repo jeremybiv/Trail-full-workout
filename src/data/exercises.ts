@@ -34,7 +34,7 @@ export const UP: Exercise[] = [
 
 export const LG: Exercise[] = [
   { id: 'squat',      m: 'squat', desc: 'Hanches arrière, talons au sol.', level: 1, photo: true },
-  { id: 'lunge',      m: 'squat', desc: 'Grand pas avant, genou arrière bas.', level: 2, photo: true },
+  { id: 'lunge',      m: 'squat', desc: 'Grand pas avant, genou arrière bas.', level: 2, photo: true, video: '/exercises/lunge.mp4' },
   { id: 'rlunge',     m: 'squat', desc: 'Pas arrière, descente contrôlée.', level: 2, photo: true },
   { id: 'jumpsquat',  m: 'squat', desc: 'Explosivité, atterrissage souple.', level: 3, photo: true },
   { id: 'calf',       m: 'calf',  desc: 'Pointes de pieds, descente lente.', level: 1, photo: true },
