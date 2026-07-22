@@ -17,7 +17,7 @@ export const UP: Exercise[] = [
   { id: 'decline',     m: 'press', desc: 'Pieds sur une marche, focus épaules.', level: 3, photo: true, video: '/exercises/decline.mp4' },
   { id: 'dips',        m: 'press', desc: 'Mains en bord de chaise, fléchis-pousse.', level: 3, photo: true },
   { id: 'pike',        m: 'press', desc: 'Fessiers hauts, pompe quasi-verticale.', level: 3, photo: true, video: '/exercises/pike.mp4' },
-  { id: 'plank',       m: 'plank', desc: 'Tête-talons alignés, respire lentement.', level: 1, hold: true, photo: true },
+  { id: 'plank',       m: 'plank', desc: 'Tête-talons alignés, respire lentement.', level: 1, hold: true, photo: true, video: '/exercises/plank.mp4' },
   { id: 'sideplank',   m: 'plank', desc: 'Avant-bras, hanches hautes.', level: 2, hold: true, unilateral: true, photo: true },
   { id: 'mountain',    m: 'cdyn',  desc: 'Genoux vers la poitrine, rythme soutenu.', level: 2, photo: true, video: '/exercises/mountain.mp4' },
   { id: 'russian',     m: 'twist', desc: 'Buste incliné, rotation gauche-droite.', level: 2, photo: true },
@@ -34,7 +34,7 @@ export const UP: Exercise[] = [
 
 export const LG: Exercise[] = [
   { id: 'squat',      m: 'squat', desc: 'Hanches arrière, talons au sol.', level: 1, photo: true },
-  { id: 'lunge',      m: 'squat', desc: 'Grand pas avant, genou arrière bas.', level: 2, photo: true },
+  { id: 'lunge',      m: 'squat', desc: 'Grand pas avant, genou arrière bas.', level: 2, photo: true, video: '/exercises/lunge.mp4' },
   { id: 'rlunge',     m: 'squat', desc: 'Pas arrière, descente contrôlée.', level: 2, photo: true },
   { id: 'jumpsquat',  m: 'squat', desc: 'Explosivité, atterrissage souple.', level: 3, photo: true },
   { id: 'calf',       m: 'calf',  desc: 'Pointes de pieds, descente lente.', level: 1, photo: true },
@@ -54,7 +54,7 @@ export const LG: Exercise[] = [
   { id: 'monwalk',    m: 'squat', desc: 'Marche latérale en position basse, tension constante.', level: 2, photo: true },
   { id: 'hamslide',   m: 'squat', desc: 'Glissé au sol, descente lente, remontée contrôlée.', level: 2, photo: true },
   { id: 'pulsesquat', m: 'squat', desc: 'Squat bas, micro-pulsions sans remonter.', level: 2, photo: true },
-  { id: 'pulselunge', m: 'squat', desc: 'Fente basse, pulses en bas de la course.', level: 2, photo: true },
+  { id: 'pulselunge', m: 'squat', desc: 'Fente basse, pulses en bas de la course.', level: 2, photo: true, video: '/exercises/pulselunge.mp4' },
   { id: 'lungewall',  m: 'squat', desc: 'Fente arrière + drive genou vers le mur.', level: 3 },
   { id: 'runjump',    m: 'squat', desc: 'Saut unilatéral explosif, réception mono-appui.', level: 3, photo: true },
 ];
