@@ -3,12 +3,14 @@ import { clientsClaim } from 'workbox-core'
 import { cleanupOutdatedCaches, precacheAndRoute } from 'workbox-precaching'
 
 declare const self: ServiceWorkerGlobalScope
+declare const __SW_BUILD__: string
 
 clientsClaim()
 cleanupOutdatedCaches()
 precacheAndRoute(self.__WB_MANIFEST)
 
 self.addEventListener('install', () => {
+  console.log('[SW] build', __SW_BUILD__)
   self.skipWaiting()
 })
 
