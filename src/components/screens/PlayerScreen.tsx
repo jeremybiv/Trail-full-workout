@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { NAME_FR } from '../../data/exerciseNamesFr';
+import { NAME_EN } from '../../data/exerciseNamesEn';
 import { ALL } from '../../data/exercises';
 import { useTimer } from '../../hooks/useTimer';
 import { useWakeLock } from '../../hooks/useWakeLock';
 import type { Session } from '../../lib/session';
 import { buildTimeline, nextWorkName, nextWorkStep } from '../../lib/session';
 import { PlayerMedia } from '../PlayerMedia';
+import { ExerciseVideo } from '../ExerciseVideo';
 
 interface Props {
   session: Session;
@@ -123,7 +124,13 @@ export function PlayerScreen({ session, onQuit, onDone }: Props) {
 
   const mediaBlock = (
     <>
-      <PlayerMedia step={step} nextStep={nextStep} paused={paused} />
+      {step?.type === 'work' && exercise?.video ? (
+        <div className="player-video-hero">
+          <ExerciseVideo url={exercise.video} autoPlay />
+        </div>
+      ) : (
+        <PlayerMedia step={step} nextStep={nextStep} paused={paused} />
+      )}
 
       {step?.type === 'rest' && nextStep?.id && (
         <p className="next-eyebrow">Prochain exercice</p>
@@ -135,8 +142,8 @@ export function PlayerScreen({ session, onQuit, onDone }: Props) {
           : step?.type === 'prep'
           ? 'Prépare-toi !'
           : step?.type === 'rest' && nextStep?.id
-          ? (NAME_FR[nextStep.id] ?? '–')
-          : (exercise ? NAME_FR[exercise.id] : '–')}
+          ? (NAME_EN[nextStep.id] ?? '–')
+          : (exercise ? NAME_EN[exercise.id] : '–')}
       </h2>
       {step?.type !== 'rest' && (
         <p className="ex-desc">

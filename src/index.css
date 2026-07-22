@@ -1388,3 +1388,34 @@ button {
 .notif-cta {
   margin-top: 4px;
 }
+
+/* ── Video ── */
+.video-player {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 10px;
+  display: block;
+  background: #000;
+}
+
+/* Hero vidéo dans le player (remplace le cercle .pmedia) */
+.player-video-hero {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  flex: none;
+}
+.player-video-hero .video-player {
+  border-radius: 14px;
+}
+
+/* Vidéo dans le modal de détail (remplace ex-detail-media) */
+.ex-detail-video {
+  width: 100%;
+}
+.ex-detail-video .video-player {
+  border-radius: 0;
+  aspect-ratio: 16 / 9;
+}

@@ -1,6 +1,7 @@
 import type { Exercise } from '../data/exercises';
-import { NAME_FR } from '../data/exerciseNamesFr';
+import { NAME_EN } from '../data/exerciseNamesEn';
 import { ExerciseMedia } from './ExerciseMedia';
+import { ExerciseVideo } from './ExerciseVideo';
 
 interface Props {
   exercise: Exercise;
@@ -20,13 +21,19 @@ export function ExerciseDetailModal({ exercise, isLeg, onClose }: Props) {
       <div className="modal-sheet ex-detail-sheet" onClick={(e) => e.stopPropagation()}>
         <button className="modal-close" onClick={onClose}>✕</button>
 
-        <div className={`ex-detail-media${isLeg ? ' leg' : ''}`}>
-          <ExerciseMedia exercise={exercise} variant="player" />
-        </div>
+        {exercise.video ? (
+          <div className="ex-detail-video">
+            <ExerciseVideo url={exercise.video} autoPlay />
+          </div>
+        ) : (
+          <div className={`ex-detail-media${isLeg ? ' leg' : ''}`}>
+            <ExerciseMedia exercise={exercise} variant="player" />
+          </div>
+        )}
 
         <div className="ex-detail-info">
           <p className={`ex-detail-tag${isLeg ? ' leg' : ''}`}>{tag}</p>
-          <h2 className="ex-detail-name">{NAME_FR[exercise.id]}</h2>
+          <h2 className="ex-detail-name">{NAME_EN[exercise.id]}</h2>
           <p className="ex-detail-desc">{exercise.desc}</p>
         </div>
       </div>
