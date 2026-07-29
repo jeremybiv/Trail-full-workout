@@ -24,7 +24,7 @@ export const UP: Exercise[] = [
   { id: 'bicycle',     m: 'twist', desc: 'Coude vers le genou opposé.', level: 2, photo: true },
   { id: 'legraise',    m: 'cdyn',  desc: 'Jambes tendues, montée lente.', level: 1, photo: true },
   { id: 'superman',    m: 'plank', desc: 'Bras et jambes décollés, dos gainé.', level: 1, hold: true, photo: true },
-  { id: 'shouldertap', m: 'cdyn',  desc: "Planche, touche l'épaule opposée.", level: 1, photo: true },
+  { id: 'shouldertap', m: 'cdyn',  desc: "Planche, touche l'épaule opposée.", level: 1, photo: true, video: '/exercises/shouldertap.mp4' },
   { id: 'flutter',     m: 'cdyn',  desc: 'Dos au sol, jambes tendues, battements alternatifs.', level: 1, photo: true },
   { id: 'splitcrunch', m: 'cdyn',  desc: 'Jambes en ciseaux, crunch synchronisé.', level: 2, photo: true },
   { id: 'splanrot',    m: 'twist', desc: 'Gainage latéral, rotation du buste vers le sol.', level: 2, unilateral: true },
@@ -33,7 +33,7 @@ export const UP: Exercise[] = [
 ];
 
 export const LG: Exercise[] = [
-  { id: 'squat',      m: 'squat', desc: 'Hanches arrière, talons au sol.', level: 1, photo: true },
+  { id: 'squat',      m: 'squat', desc: 'Hanches arrière, talons au sol.', level: 1, photo: true, video: '/exercises/squat.mp4' },
   { id: 'lunge',      m: 'squat', desc: 'Grand pas avant, genou arrière bas.', level: 2, photo: true, video: '/exercises/lunge.mp4' },
   { id: 'rlunge',     m: 'squat', desc: 'Pas arrière, descente contrôlée.', level: 2, photo: true },
   { id: 'jumpsquat',  m: 'squat', desc: 'Explosivité, atterrissage souple.', level: 3, photo: true },
