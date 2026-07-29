@@ -1,0 +1,21 @@
+{
+  "name": "Renfo Trail",
+  "short_name": "Trail",
+  "description": "Application de renforcement pour le trail running",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1c2620",
+  "theme_color": "#1c2620",
+  "icons": [
+    {
+      "src": "/icons/apple-touch-icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/apple-touch-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
