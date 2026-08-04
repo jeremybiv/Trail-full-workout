@@ -44,4 +44,9 @@ export const NAME_EN: Record<string, string> = {
   pulselunge: 'Pulse Lunge',
   lungewall: 'Lunge to Wall Drive',
   runjump: "Runner's Jump",
+  bulgarian: 'Bulgarian Split Squat',
+  stepup: 'Step-Up',
+  unibalance: 'Single-Leg Balance (Eyes Closed)',
+  eccsquat: 'Eccentric Squat',
+  calfstep: 'Step Calf Raise',
 };
