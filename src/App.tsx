@@ -5,7 +5,8 @@ import { useProfile } from './hooks/useProfile';
 import { useNotifications } from './hooks/useNotifications';
 import { usePWA } from './hooks/usePWA';
 import { unlockAudio } from './lib/audio';
-import { today } from './lib/session';
+import { today, buildLowerSeriesSession } from './lib/session';
+import type { Session } from './lib/session';
 import { HomeScreen } from './components/screens/HomeScreen';
 import { PlayerScreen } from './components/screens/PlayerScreen';
 import { DoneScreen } from './components/screens/DoneScreen';
@@ -19,8 +20,10 @@ export default function App() {
   const [doneDuration, setDoneDuration] = useState(0);
   const [showHistory, setShowHistory] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [customSession, setCustomSession] = useState<Session | null>(null);
 
   const { session, routeName, ready, regen, focus, duration, difficulty, setFocus, setDuration, setDifficulty } = useWorkoutSession();
+  const activeSession = customSession ?? session;
   const { records, addRecord, streak, bestStreak, totalSessions, totalMinutes } = useWorkoutHistory();
   const { prefs, updatePrefs } = useProfile();
   const { permission, requestPermission, updateSubscription, unsubscribe } = useNotifications(prefs, records);
@@ -36,23 +39,35 @@ export default function App() {
     setView('player');
   }, []);
 
+  const handleStartLowerSeries = useCallback(() => {
+    unlockAudio();
+    setCustomSession(buildLowerSeriesSession(duration, difficulty));
+    setView('player');
+  }, [duration, difficulty]);
+
   const handleDone = useCallback((elapsed: number) => {
-    if (session) {
+    if (activeSession) {
       addRecord({
         date: today(),
         ts: Date.now(),
         elapsed,
-        focus: session.focus,
-        duration: session.duration,
-        rounds: session.duration === 'long' ? 4 : 2,
+        focus: activeSession.focus,
+        duration: activeSession.duration,
+        rounds: activeSession.duration === 'long' ? 4 : 2,
       });
     }
     setDoneDuration(elapsed);
     setView('done');
-  }, [session, addRecord]);
+  }, [activeSession, addRecord]);
 
-  const handleQuit = useCallback(() => setView('home'), []);
-  const handleBack = useCallback(() => setView('home'), []);
+  const handleQuit = useCallback(() => {
+    setCustomSession(null);
+    setView('home');
+  }, []);
+  const handleBack = useCallback(() => {
+    setCustomSession(null);
+    setView('home');
+  }, []);
 
   return (
     <>
@@ -77,11 +92,12 @@ export default function App() {
           onOpenProfile={() => setShowProfile(true)}
           difficulty={difficulty}
           onDifficultyChange={setDifficulty}
+          onStartLowerSeries={handleStartLowerSeries}
         />
       )}
-      {view === 'player' && session && (
+      {view === 'player' && activeSession && (
         <PlayerScreen
-          session={session}
+          session={activeSession}
           onQuit={handleQuit}
           onDone={handleDone}
         />
@@ -89,7 +105,7 @@ export default function App() {
       {view === 'done' && (
         <DoneScreen
           totalDur={doneDuration}
-          session={session}
+          session={activeSession}
           records={records}
           streak={streak}
           bestStreak={bestStreak}

@@ -176,6 +176,22 @@ button {
   padding: 4px 10px;
 }
 
+.lower-series-btn {
+  width: 100%;
+  padding: 10px;
+  margin: 0 0 16px;
+  background: transparent;
+  color: var(--blaze);
+  border: 1.5px dashed var(--blaze);
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.lower-series-btn:active {
+  transform: translateY(1px);
+}
+
 .regen-btn {
   font-size: 20px;
   color: var(--blaze);

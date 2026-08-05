@@ -1,12 +1,16 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Session, Difficulty } from '../../lib/session';
 import type { Exercise } from '../../data/exercises';
 import { ALL } from '../../data/exercises';
 import { dateLabel } from '../../lib/format';
+import { sg, ss } from '../../lib/storage';
 import { ExerciseCard } from '../ExerciseCard';
 import { ExerciseDetailModal } from '../ExerciseDetailModal';
 import { InstallBanner } from '../InstallBanner';
 import { InstallModal } from '../InstallModal';
+
+const LOWER_SERIES_UNLOCK_KEY = 'lowerSeriesUnlocked';
+const LONG_PRESS_MS = 2000;
 
 interface Props {
   session: Session | null;
@@ -28,6 +32,7 @@ interface Props {
   onOpenProfile: () => void;
   difficulty: Difficulty;
   onDifficultyChange: (d: Difficulty) => void;
+  onStartLowerSeries: () => void;
 }
 
 const DIFF_LABELS: Record<Difficulty, string> = {
@@ -42,11 +47,35 @@ export function HomeScreen({
   showInstall, promptReady, isIOS, onInstall, onDismissInstall,
   streak, onOpenHistory, onOpenProfile,
   difficulty, onDifficultyChange,
+  onStartLowerSeries,
 }: Props) {
   const exercises = session ? session.ids.map((id) => ALL[id]) : [];
   const [showModal, setShowModal] = useState(false);
   const modalShown = useRef(false);
   const [detailExercise, setDetailExercise] = useState<{ ex: Exercise; isLeg: boolean } | null>(null);
+  const [lowerSeriesUnlocked, setLowerSeriesUnlocked] = useState(false);
+  const pressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    void sg<boolean>(LOWER_SERIES_UNLOCK_KEY).then((v) => {
+      if (v) setLowerSeriesUnlocked(true);
+    });
+  }, []);
+
+  const clearPressTimer = useCallback(() => {
+    if (pressTimer.current) {
+      clearTimeout(pressTimer.current);
+      pressTimer.current = null;
+    }
+  }, []);
+
+  const handleTitlePressStart = useCallback(() => {
+    clearPressTimer();
+    pressTimer.current = setTimeout(() => {
+      setLowerSeriesUnlocked(true);
+      void ss(LOWER_SERIES_UNLOCK_KEY, true);
+    }, LONG_PRESS_MS);
+  }, [clearPressTimer]);
 
   const handleStartClick = useCallback(() => {
     if (showInstall && !modalShown.current) {
@@ -82,7 +111,15 @@ export function HomeScreen({
           </div>
         </div>
         <div className="hdr-row">
-          <h1 className="route">{routeName || 'Renfo du jour'}</h1>
+          <h1
+            className="route"
+            onPointerDown={handleTitlePressStart}
+            onPointerUp={clearPressTimer}
+            onPointerLeave={clearPressTimer}
+            onPointerCancel={clearPressTimer}
+          >
+            {routeName || 'Renfo du jour'}
+          </h1>
           <button className="regen-btn" onClick={onRegen} title="Changer les exercices">🎲</button>
         </div>
       </div>
@@ -131,6 +168,12 @@ export function HomeScreen({
           </button>
         ))}
       </div>
+
+      {lowerSeriesUnlocked && (
+        <button className="lower-series-btn" onClick={onStartLowerSeries}>
+          🦵 Série bas du corps (perso)
+        </button>
+      )}
 
       <div className="workout-meta">
         <span className="meta-pill">{duration === 'short' ? '~14 min' : '~29 min'}</span>
