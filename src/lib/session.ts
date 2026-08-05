@@ -6,6 +6,16 @@ import { hash, rng32, shuffle } from './rng';
 
 export type Difficulty = 'deb' | 'int' | 'conf';
 
+// Série fixe "bas du corps" (proprioception / renfo genou-cheville trail).
+export const LOWER_SERIES_IDS = [
+  'bulgarian',
+  'stepup',
+  'wallsit',
+  'unibalance',
+  'eccsquat',
+  'calfstep',
+];
+
 export interface Session {
   ids: string[];
   legIds: string[];
@@ -72,6 +82,15 @@ export function buildSession(seed: string, opts?: {
     ] as Exercise[];
     return { ids: order.map((e) => e.id), legIds: legs.map((e) => e.id), seed, focus, duration, difficulty };
   }
+}
+
+export function buildLowerSeriesSession(duration: 'short' | 'long', difficulty: Difficulty): Session {
+  return buildSession(`lower-series-${Date.now()}`, {
+    legIds: LOWER_SERIES_IDS,
+    focus: 'lower',
+    duration,
+    difficulty,
+  });
 }
 
 export function buildTimeline(ids: string[], duration: 'short' | 'long' = 'short'): Step[] {
