@@ -57,7 +57,7 @@ export const LG: Exercise[] = [
   { id: 'pulselunge', m: 'squat', desc: 'Fente basse, pulses en bas de la course.', level: 2, photo: true, video: '/exercises/pulselunge.mp4' },
   { id: 'lungewall',  m: 'squat', desc: 'Fente arrière + drive genou vers le mur.', level: 3 },
   { id: 'runjump',    m: 'squat', desc: 'Saut unilatéral explosif, réception mono-appui.', level: 3, photo: true },
-  { id: 'bulgarian',  m: 'squat', desc: 'Pied arrière surélevé, descente jambe avant.', level: 3, unilateral: true },
+  { id: 'bulgarian',  m: 'squat', desc: 'Pied arrière surélevé, descente jambe avant.', level: 3, unilateral: true, video: '/exercises/bulgarian.mp4' },
   { id: 'stepup',     m: 'squat', desc: 'Monte sur une marche, pousse par le talon.', level: 2, unilateral: true },
   { id: 'unibalance', m: 'plank', desc: 'Sur une jambe, yeux fermés, stabilise le bassin.', level: 3, hold: true, unilateral: true },
   { id: 'eccsquat',   m: 'squat', desc: 'Descente 5 secondes, remontée normale.', level: 2 },
