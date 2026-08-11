@@ -157,7 +157,7 @@ function shouldNotify(record: SubscriptionRecord, now: Date): boolean {
 }
 
 function notifMessage(record: SubscriptionRecord): string {
-  const curWeekStart = weekStartISO(record.prefs.timezone)
+  const curWeekStart = weekStartISO(record.prefs.timezone);
   const done = record.weekStart === curWeekStart ? record.workoutsThisWeek : 0
   const left = record.prefs.workoutsPerWeek - done
   if (left === 1) return 'Plus qu'une séance pour atteindre ton objectif cette semaine 💪'
