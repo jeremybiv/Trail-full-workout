@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import { useWorkoutSession } from './hooks/useWorkoutSession';
 import { useWorkoutHistory } from './hooks/useWorkoutHistory';
 import { useProfile } from './hooks/useProfile';
@@ -135,6 +136,7 @@ export default function App() {
           onClose={() => setShowProfile(false)}
         />
       )}
+      <Analytics />
     </>
   );
 }
