@@ -1,0 +1,102 @@
+/* Minimal styling for the unlinked /admin video-generator tool. Reuses the
+   app's color tokens (defined in src/index.css, loaded globally by
+   main.tsx) but keeps its own layout — this is a personal utility page,
+   not part of the product surface. */
+
+.admin-page {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 24px 16px 64px;
+  color: var(--ink);
+}
+
+.admin-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  letter-spacing: 0.02em;
+  margin: 0 0 4px;
+}
+
+.admin-hint {
+  color: var(--dim);
+  font-size: 13px;
+  margin: 0 0 20px;
+}
+
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.admin-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--dim);
+}
+
+.admin-field input,
+.admin-field select,
+.admin-field textarea {
+  font-family: inherit;
+  font-size: 15px;
+  color: var(--ink);
+  background: var(--surf);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px 12px;
+  resize: vertical;
+}
+
+.admin-row {
+  display: flex;
+  gap: 12px;
+}
+
+.admin-row .admin-field {
+  flex: 1;
+}
+
+.admin-cost {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--gold);
+  margin: 0;
+}
+
+.admin-submit {
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--ink);
+  background: var(--blaze);
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  cursor: pointer;
+}
+
+.admin-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.admin-status {
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--dim);
+}
+
+.admin-error {
+  margin-top: 16px;
+  font-size: 13px;
+  color: #e05a5a;
+}
+
+.admin-preview {
+  margin-top: 20px;
+  border-radius: 12px;
+  overflow: hidden;
+}
