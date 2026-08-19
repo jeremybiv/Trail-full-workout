@@ -58,3 +58,25 @@ npx tsc --noEmit # typecheck
 No iOS/Android simulator is available in the sandboxed session that built this — verification
 there was limited to `tsc --noEmit`, `expo export`, and `expo-doctor`. Please test on a real
 device via Expo Go and report back anything that looks wrong.
+
+## Building a real, installable Android APK (no Expo Go)
+
+`eas.json` is set up with a `preview` profile (`buildType: apk`, internal distribution — no Play
+Store needed). Building requires **your own free Expo account**, which this session can't create
+or log into on your behalf. From the `mobile/` directory, on your own machine:
+
+```bash
+npx eas-cli login          # creates/logs into a free account at expo.dev if needed
+npx eas-cli build:configure --platform android   # links this project to your account (one-time)
+npx eas-cli build --platform android --profile preview
+```
+
+The build runs in Expo's cloud (~10–15 min, free tier). When it finishes, the terminal prints a
+link (and Expo emails you one) to download the `.apk` directly — open that link on your Android
+phone, download, and Android will prompt to install it (you'll need to allow "install unknown
+apps" for your browser once). This gives you a real installed app icon, no dev server or QR code
+needed afterwards — though at this stage it still needs the internet for `expo-image`-loaded
+exercise photos/videos (`src/config.ts`'s `MEDIA_BASE_URL`), which isn't bundled offline yet.
+
+Store submission (Play Store `production` profile → signed `.aab`) is still Phase 7 — it needs a
+Google Play Console account and app-signing setup, not just `eas.json`.
