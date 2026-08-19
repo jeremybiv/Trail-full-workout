@@ -4,7 +4,7 @@ Native rewrite of the "Renfo Trail" PWA (`../src`), built with Expo + React Nati
 See `/root/.claude/plans/quel-est-le-plan-prancy-cray.md` in the original session, or the repo's
 `git log` on this branch, for the full rewrite plan and phase breakdown.
 
-## Status: Phase 0–2 (scaffold, core logic, Home screen)
+## Status: Phase 0–3 (scaffold, core logic, Home + Player + Done screens)
 
 - Project scaffold (Expo SDK 57, TypeScript)
 - Core logic ported from `../src/lib`, `../src/data`, `../src/animations` (session generation,
@@ -18,17 +18,26 @@ See `/root/.claude/plans/quel-est-le-plan-prancy-cray.md` in the original sessio
   at the deployed web app's origin and exercise media is fetched over HTTP via `expo-image`
   (disk-cached). **Update `MEDIA_BASE_URL` to the real production domain** before testing on a
   device or doing an EAS build.
+- `src/lib/audio.ts` rewritten on `expo-audio`: the web version synthesizes beeps on the fly with
+  a Web Audio oscillator, which has no RN equivalent, so 3 short sine-wave beeps were pre-rendered
+  as WAV assets (`assets/sounds/`, generator script not committed) and are played back instead.
+- `useTimer.ts` (unchanged) and `useWakeLock.ts` (rewritten on `expo-keep-awake`, much simpler than
+  the web's manual `navigator.wakeLock` + visibilitychange dance) power the Player screen.
+- Player screen rebuilt: SVG progress ring (`react-native-svg`), progress bar/dots, phase label,
+  exercise media, quit-confirm modal, Android hardware-back routed into the same quit flow.
+- A minimal Done screen (stats grid + recent history list + back button) closes the loop — full
+  History/Profile *modals* (reachable from the Home screen buttons) are still Phase 4.
+
+The full loop (home → player → done → home, with streak/history persisted) is testable end-to-end
+on a real device now.
 
 ## Not yet built (later phases)
 
-- Player screen, timer, audio, wake lock, quit-confirm (Phase 3)
-- Done screen, History/Profile modals, exercise video playback (Phase 4)
+- History/Profile modals (buttons on Home screen still show a placeholder alert), exercise video
+  playback in the detail modal (Phase 4)
 - Push notifications + Cloudflare Worker adaptation (Phase 5)
 - Media/asset polish, bottom-sheet modals (Phase 6)
 - EAS build + store submission (Phase 7)
-
-`useTimer.ts` was intentionally **not** copied yet — it imports `../lib/audio`, which doesn't
-have a React Native implementation until Phase 3.
 
 ## Why files are duplicated instead of imported from `../src`
 

@@ -21,6 +21,8 @@ export const COLORS = {
   lv2: '#2c74e8',
   lv3: '#e85c2c',
   onBlaze: '#1c1208',
+  onRest: '#0d1f18',
+  playerBg: '#141c17',
 } as const;
 
 export const FONTS = {
