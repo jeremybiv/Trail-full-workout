@@ -8,6 +8,7 @@ import { useWakeLock } from '../../hooks/useWakeLock';
 import type { Session, StepKind } from '../../lib/session';
 import { buildTimeline, nextWorkName, nextWorkStep } from '../../lib/session';
 import { PlayerMedia } from '../PlayerMedia';
+import { ExerciseVideo } from '../ExerciseVideo';
 import { TimerRing, RING_CIRC } from '../TimerRing';
 import { COLORS, FONTS, RADIUS } from '../../theme/tokens';
 
@@ -126,7 +127,13 @@ export function PlayerScreen({ session, onQuit, onDone }: Props) {
 
   const mediaBlock = (
     <>
-      <PlayerMedia step={step} nextStep={nextStep} paused={paused} />
+      {step?.type === 'work' && exercise?.video ? (
+        <View style={styles.videoHero}>
+          <ExerciseVideo url={exercise.video} autoPlay />
+        </View>
+      ) : (
+        <PlayerMedia step={step} nextStep={nextStep} paused={paused} />
+      )}
 
       {step?.type === 'rest' && nextStep?.id && (
         <Text style={styles.nextEyebrow}>Prochain exercice</Text>
@@ -259,6 +266,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 4,
+  },
+  videoHero: {
+    width: '100%',
+    maxWidth: 420,
+    borderRadius: RADIUS.lg,
+    overflow: 'hidden',
+    marginBottom: 10,
   },
   iconBtn: {
     minWidth: 44,

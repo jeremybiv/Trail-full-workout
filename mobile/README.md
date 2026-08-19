@@ -4,7 +4,7 @@ Native rewrite of the "Renfo Trail" PWA (`../src`), built with Expo + React Nati
 See `/root/.claude/plans/quel-est-le-plan-prancy-cray.md` in the original session, or the repo's
 `git log` on this branch, for the full rewrite plan and phase breakdown.
 
-## Status: Phase 0–3 (scaffold, core logic, Home + Player + Done screens)
+## Status: Phase 0–4 (scaffold, core logic, Home + Player + Done screens, History/Profile modals)
 
 - Project scaffold (Expo SDK 57, TypeScript)
 - Core logic ported from `../src/lib`, `../src/data`, `../src/animations` (session generation,
@@ -25,19 +25,24 @@ See `/root/.claude/plans/quel-est-le-plan-prancy-cray.md` in the original sessio
   the web's manual `navigator.wakeLock` + visibilitychange dance) power the Player screen.
 - Player screen rebuilt: SVG progress ring (`react-native-svg`), progress bar/dots, phase label,
   exercise media, quit-confirm modal, Android hardware-back routed into the same quit flow.
-- A minimal Done screen (stats grid + recent history list + back button) closes the loop — full
-  History/Profile *modals* (reachable from the Home screen buttons) are still Phase 4.
+- A minimal Done screen (stats grid + recent history list + back button) closes the loop.
+- `ExerciseVideo.tsx` added on `expo-video` (`useVideoPlayer` + `VideoView`) and wired in wherever
+  the web app shows one: the exercise detail modal (when `exercise.video` is set) and the Player
+  screen's hero during the `work` phase (replacing the circular media/lottie).
+- `HistoryModal.tsx` (stats grid + full scrollable history list) and `ProfileModal.tsx` (stats +
+  weekly-goal picker, both backed by the already-ported `useWorkoutHistory`/`useProfile` hooks) are
+  now real modals reachable from the Home screen's 📋/👤 buttons — no more placeholder alerts.
 
-The full loop (home → player → done → home, with streak/history persisted) is testable end-to-end
-on a real device now.
+The full loop (home → player → done → home, with streak/history persisted, exercise videos
+playing, and History/Profile reachable) is testable end-to-end on a real device now.
 
 ## Not yet built (later phases)
 
-- History/Profile modals (buttons on Home screen still show a placeholder alert), exercise video
-  playback in the detail modal (Phase 4)
-- Push notifications + Cloudflare Worker adaptation (Phase 5)
+- **Notifications**: `ProfileModal`'s reminder section is a placeholder ("Bientôt disponible") —
+  the web version's toggle/reminder-time UI is Web Push + Cloudflare Worker specific and needs
+  `expo-notifications` + a rework of the push backend for Expo's token format (Phase 5)
 - Media/asset polish, bottom-sheet modals (Phase 6)
-- EAS build + store submission (Phase 7)
+- EAS build + store submission (Phase 7 — `eas.json` scaffolded, see below)
 
 ## Why files are duplicated instead of imported from `../src`
 

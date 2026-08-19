@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
@@ -13,12 +13,15 @@ import {
 import { JetBrainsMono_500Medium, JetBrainsMono_700Bold } from '@expo-google-fonts/jetbrains-mono';
 import { useWorkoutSession } from './src/hooks/useWorkoutSession';
 import { useWorkoutHistory } from './src/hooks/useWorkoutHistory';
+import { useProfile } from './src/hooks/useProfile';
 import { unlockAudio } from './src/lib/audio';
 import { today, buildLowerSeriesSession } from './src/lib/session';
 import type { Session } from './src/lib/session';
 import { HomeScreen } from './src/components/screens/HomeScreen';
 import { PlayerScreen } from './src/components/screens/PlayerScreen';
 import { DoneScreen } from './src/components/screens/DoneScreen';
+import { HistoryModal } from './src/components/HistoryModal';
+import { ProfileModal } from './src/components/ProfileModal';
 import { COLORS } from './src/theme/tokens';
 
 void SplashScreen.preventAutoHideAsync();
@@ -39,13 +42,16 @@ export default function App() {
   const [view, setView] = useState<Screen>('home');
   const [doneDuration, setDoneDuration] = useState(0);
   const [customSession, setCustomSession] = useState<Session | null>(null);
+  const [showHistory, setShowHistory] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
 
   const {
     session, routeName, ready, regen, focus, duration, difficulty,
     setFocus, setDuration, setDifficulty,
   } = useWorkoutSession();
   const activeSession = customSession ?? session;
-  const { records, addRecord, streak, bestStreak, totalSessions } = useWorkoutHistory();
+  const { records, addRecord, streak, bestStreak, totalSessions, totalMinutes } = useWorkoutHistory();
+  const { prefs, updatePrefs } = useProfile();
 
   useEffect(() => {
     if (fontsLoaded) void SplashScreen.hideAsync();
@@ -87,14 +93,6 @@ export default function App() {
     setView('home');
   }, []);
 
-  // History/Profile screens land in Phase 4 of the mobile rewrite plan — stub for now.
-  const handleOpenHistory = useCallback(() => {
-    Alert.alert('Bientôt disponible', "L'historique complet arrive dans une prochaine phase.");
-  }, []);
-  const handleOpenProfile = useCallback(() => {
-    Alert.alert('Bientôt disponible', 'Le profil arrive dans une prochaine phase.');
-  }, []);
-
   if (!fontsLoaded) return null;
 
   return (
@@ -112,8 +110,8 @@ export default function App() {
             onFocusChange={setFocus}
             onDurationChange={setDuration}
             streak={streak}
-            onOpenHistory={handleOpenHistory}
-            onOpenProfile={handleOpenProfile}
+            onOpenHistory={() => setShowHistory(true)}
+            onOpenProfile={() => setShowProfile(true)}
             difficulty={difficulty}
             onDifficultyChange={setDifficulty}
             onStartLowerSeries={handleStartLowerSeries}
@@ -135,6 +133,25 @@ export default function App() {
             bestStreak={bestStreak}
             totalSessions={totalSessions}
             onBack={handleBack}
+          />
+        )}
+        {showHistory && (
+          <HistoryModal
+            records={records}
+            streak={streak}
+            bestStreak={bestStreak}
+            totalSessions={totalSessions}
+            totalMinutes={totalMinutes}
+            onClose={() => setShowHistory(false)}
+          />
+        )}
+        {showProfile && prefs && (
+          <ProfileModal
+            prefs={prefs}
+            streak={streak}
+            totalSessions={totalSessions}
+            onUpdate={updatePrefs}
+            onClose={() => setShowProfile(false)}
           />
         )}
         <StatusBar style="light" />

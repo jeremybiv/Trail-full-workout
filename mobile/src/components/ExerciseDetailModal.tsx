@@ -3,6 +3,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import type { Exercise } from '../data/exercises';
 import { NAME_EN } from '../data/exerciseNamesEn';
 import { ExerciseMedia } from './ExerciseMedia';
+import { ExerciseVideo } from './ExerciseVideo';
 import { COLORS, FONTS } from '../theme/tokens';
 
 interface Props {
@@ -11,9 +12,6 @@ interface Props {
   onClose: () => void;
 }
 
-// NOTE: the web version shows a looping .mp4 for exercises with `exercise.video`
-// (via ExerciseVideo). That component needs expo-video, which is Phase 4 scope —
-// for now every exercise falls back to its photo crossfade / lottie animation.
 export function ExerciseDetailModal({ exercise, isLeg, onClose }: Props) {
   const tag = isLeg ? '🎲 Jambes — tirage du jour' : exercise.hold ? 'Maintien' : 'Haut du corps / Abdos';
 
@@ -32,9 +30,13 @@ export function ExerciseDetailModal({ exercise, isLeg, onClose }: Props) {
               <Text style={styles.closeIcon}>✕</Text>
             </Pressable>
 
-            <View style={styles.media}>
-              <ExerciseMedia exercise={exercise} variant="player" />
-            </View>
+            {exercise.video ? (
+              <ExerciseVideo url={exercise.video} autoPlay />
+            ) : (
+              <View style={styles.media}>
+                <ExerciseMedia exercise={exercise} variant="player" />
+              </View>
+            )}
 
             <View style={styles.info}>
               <Text style={[styles.tag, isLeg && styles.tagLeg]}>{tag}</Text>
@@ -83,7 +85,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  mediaLeg: {},
   info: {
     padding: 24,
     paddingTop: 20,
