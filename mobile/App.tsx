@@ -14,6 +14,7 @@ import { JetBrainsMono_500Medium, JetBrainsMono_700Bold } from '@expo-google-fon
 import { useWorkoutSession } from './src/hooks/useWorkoutSession';
 import { useWorkoutHistory } from './src/hooks/useWorkoutHistory';
 import { useProfile } from './src/hooks/useProfile';
+import { useNotifications } from './src/hooks/useNotifications';
 import { unlockAudio } from './src/lib/audio';
 import { today, buildLowerSeriesSession } from './src/lib/session';
 import type { Session } from './src/lib/session';
@@ -52,6 +53,7 @@ export default function App() {
   const activeSession = customSession ?? session;
   const { records, addRecord, streak, bestStreak, totalSessions, totalMinutes } = useWorkoutHistory();
   const { prefs, updatePrefs } = useProfile();
+  const { permission, requestPermission } = useNotifications(prefs);
 
   useEffect(() => {
     if (fontsLoaded) void SplashScreen.hideAsync();
@@ -148,9 +150,11 @@ export default function App() {
         {showProfile && prefs && (
           <ProfileModal
             prefs={prefs}
+            permission={permission}
             streak={streak}
             totalSessions={totalSessions}
             onUpdate={updatePrefs}
+            onRequestPermission={requestPermission}
             onClose={() => setShowProfile(false)}
           />
         )}

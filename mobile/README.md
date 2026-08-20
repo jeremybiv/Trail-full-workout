@@ -4,7 +4,7 @@ Native rewrite of the "Renfo Trail" PWA (`../src`), built with Expo + React Nati
 See `/root/.claude/plans/quel-est-le-plan-prancy-cray.md` in the original session, or the repo's
 `git log` on this branch, for the full rewrite plan and phase breakdown.
 
-## Status: Phase 0–4 (scaffold, core logic, Home + Player + Done screens, History/Profile modals)
+## Status: Phase 0–5 (scaffold, core logic, all 4 screens, History/Profile modals, notifications)
 
 - Project scaffold (Expo SDK 57, TypeScript)
 - Core logic ported from `../src/lib`, `../src/data`, `../src/animations` (session generation,
@@ -32,17 +32,31 @@ See `/root/.claude/plans/quel-est-le-plan-prancy-cray.md` in the original sessio
 - `HistoryModal.tsx` (stats grid + full scrollable history list) and `ProfileModal.tsx` (stats +
   weekly-goal picker, both backed by the already-ported `useWorkoutHistory`/`useProfile` hooks) are
   now real modals reachable from the Home screen's 📋/👤 buttons — no more placeholder alerts.
+- `useNotifications.ts` rewritten on `expo-notifications`: a **local, on-device daily reminder**
+  (not Web Push). This is a deliberate architecture change from the web version, not just a 1:1
+  port — see the comment at the top of that file. The web app's Cloudflare Worker evaluates hourly
+  whether each device has met its weekly goal and only pushes if not; reproducing that "goal-aware"
+  suppression with local notifications would need periodic rescheduling that only happens when the
+  app is opened (no background execution without a dev-client build), which isn't reliable enough
+  to be worth the complexity. Instead: pick a time in the Profile modal, get a daily reminder at
+  that time, unconditionally — no backend involved. `ProfileModal`'s notification section is now a
+  real `Switch` + `@react-native-community/datetimepicker` time picker, permission-request flow
+  included.
 
 The full loop (home → player → done → home, with streak/history persisted, exercise videos
-playing, and History/Profile reachable) is testable end-to-end on a real device now.
+playing, History/Profile reachable, and a working daily reminder) is testable end-to-end on a
+real device now — this is feature-complete relative to the web app except for its "goal-aware"
+push logic (see above).
 
 ## Not yet built (later phases)
 
-- **Notifications**: `ProfileModal`'s reminder section is a placeholder ("Bientôt disponible") —
-  the web version's toggle/reminder-time UI is Web Push + Cloudflare Worker specific and needs
-  `expo-notifications` + a rework of the push backend for Expo's token format (Phase 5)
 - Media/asset polish, bottom-sheet modals (Phase 6)
 - EAS build + store submission (Phase 7 — `eas.json` scaffolded, see below)
+
+## Note on the Cloudflare Worker (`../worker`)
+
+It's now only used by the web app (Web Push). The mobile app's reminders are fully local and never
+call it. If the web app is ever retired, the worker's push-subscription code can be deleted too.
 
 ## Why files are duplicated instead of imported from `../src`
 

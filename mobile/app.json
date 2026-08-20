@@ -31,7 +31,9 @@
       "expo-splash-screen",
       "expo-audio",
       "expo-asset",
-      "expo-video"
+      "expo-video",
+      "@react-native-community/datetimepicker",
+      "expo-notifications"
     ]
   }
 }
