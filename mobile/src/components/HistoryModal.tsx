@@ -1,5 +1,6 @@
-import { Dimensions, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { StyleSheet, Text, View } from 'react-native';
+import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { Sheet } from './Sheet';
 import { fmt } from '../lib/format';
 import { WDAYS, MONTHS } from '../data/constants';
 import type { WorkoutRecord } from '../hooks/useWorkoutHistory';
@@ -22,92 +23,46 @@ function fmtDate(date: string): string {
 
 export function HistoryModal({ records, streak, bestStreak, totalSessions, totalMinutes, onClose }: Props) {
   return (
-    <Modal
-      visible
-      animationType="slide"
-      transparent
-      presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : undefined}
-      onRequestClose={onClose}
-    >
-      <Pressable style={styles.backdrop} onPress={onClose}>
-        <Pressable style={styles.sheet} onPress={(e) => e.stopPropagation()}>
-          <SafeAreaView edges={['bottom']}>
-            <Pressable style={styles.closeBtn} onPress={onClose} hitSlop={8}>
-              <Text style={styles.closeIcon}>✕</Text>
-            </Pressable>
-            <Text style={styles.title}>Mon historique</Text>
+    <Sheet onClose={onClose} snapPoints={['55%', '90%']}>
+      <Text style={styles.title}>Mon historique</Text>
 
-            <View style={styles.statsGrid}>
-              <View style={styles.statBox}>
-                <Text style={styles.statVal}>🔥 {streak}</Text>
-                <Text style={styles.statLbl}>Streak actuel</Text>
-              </View>
-              <View style={styles.statBox}>
-                <Text style={styles.statVal}>⭐ {bestStreak}</Text>
-                <Text style={styles.statLbl}>Meilleur streak</Text>
-              </View>
-              <View style={styles.statBox}>
-                <Text style={styles.statVal}>{totalSessions}</Text>
-                <Text style={styles.statLbl}>Séances</Text>
-              </View>
-              <View style={styles.statBox}>
-                <Text style={styles.statVal}>{totalMinutes}</Text>
-                <Text style={styles.statLbl}>Minutes</Text>
-              </View>
+      <View style={styles.statsGrid}>
+        <View style={styles.statBox}>
+          <Text style={styles.statVal}>🔥 {streak}</Text>
+          <Text style={styles.statLbl}>Streak actuel</Text>
+        </View>
+        <View style={styles.statBox}>
+          <Text style={styles.statVal}>⭐ {bestStreak}</Text>
+          <Text style={styles.statLbl}>Meilleur streak</Text>
+        </View>
+        <View style={styles.statBox}>
+          <Text style={styles.statVal}>{totalSessions}</Text>
+          <Text style={styles.statLbl}>Séances</Text>
+        </View>
+        <View style={styles.statBox}>
+          <Text style={styles.statVal}>{totalMinutes}</Text>
+          <Text style={styles.statLbl}>Minutes</Text>
+        </View>
+      </View>
+
+      {records.length === 0 ? (
+        <Text style={styles.empty}>Aucune séance enregistrée.</Text>
+      ) : (
+        <BottomSheetScrollView style={styles.list} showsVerticalScrollIndicator={false}>
+          {records.map((r) => (
+            <View key={r.ts} style={styles.row}>
+              <Text style={styles.rowDate}>{fmtDate(r.date)}</Text>
+              <Text style={styles.rowTag}>{r.focus === 'upper' ? '💪' : '🦵'} {r.rounds}×</Text>
+              <Text style={styles.rowDur}>{fmt(r.elapsed)}</Text>
             </View>
-
-            {records.length === 0 ? (
-              <Text style={styles.empty}>Aucune séance enregistrée.</Text>
-            ) : (
-              <ScrollView style={styles.list} showsVerticalScrollIndicator={false}>
-                {records.map((r) => (
-                  <View key={r.ts} style={styles.row}>
-                    <Text style={styles.rowDate}>{fmtDate(r.date)}</Text>
-                    <Text style={styles.rowTag}>{r.focus === 'upper' ? '💪' : '🦵'} {r.rounds}×</Text>
-                    <Text style={styles.rowDur}>{fmt(r.elapsed)}</Text>
-                  </View>
-                ))}
-              </ScrollView>
-            )}
-          </SafeAreaView>
-        </Pressable>
-      </Pressable>
-    </Modal>
+          ))}
+        </BottomSheetScrollView>
+      )}
+    </Sheet>
   );
 }
 
-const SCREEN_H = Dimensions.get('window').height;
-
 const styles = StyleSheet.create({
-  backdrop: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.65)',
-    justifyContent: 'flex-end',
-  },
-  sheet: {
-    maxHeight: SCREEN_H * 0.85,
-    backgroundColor: COLORS.surf,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    paddingHorizontal: 24,
-    paddingTop: 28,
-  },
-  closeBtn: {
-    position: 'absolute',
-    top: 14,
-    right: 16,
-    zIndex: 2,
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: COLORS.surf2,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  closeIcon: {
-    color: COLORS.dim,
-    fontSize: 13,
-  },
   title: {
     fontFamily: FONTS.display,
     fontSize: 29,
@@ -149,7 +104,7 @@ const styles = StyleSheet.create({
     paddingVertical: 24,
   },
   list: {
-    marginBottom: 24,
+    flex: 1,
   },
   row: {
     flexDirection: 'row',

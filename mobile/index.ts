@@ -1,3 +1,7 @@
+// Must be the very first import — react-native-gesture-handler (used by
+// @gorhom/bottom-sheet) requires this to run before anything else touches
+// the native module registry.
+import 'react-native-gesture-handler';
 import { registerRootComponent } from 'expo';
 
 import App from './App';

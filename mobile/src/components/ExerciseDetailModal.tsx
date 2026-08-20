@@ -1,5 +1,5 @@
-import { Modal, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Sheet } from './Sheet';
 import type { Exercise } from '../data/exercises';
 import { NAME_EN } from '../data/exerciseNamesEn';
 import { ExerciseMedia } from './ExerciseMedia';
@@ -16,52 +16,29 @@ export function ExerciseDetailModal({ exercise, isLeg, onClose }: Props) {
   const tag = isLeg ? '🎲 Jambes — tirage du jour' : exercise.hold ? 'Maintien' : 'Haut du corps / Abdos';
 
   return (
-    <Modal
-      visible
-      animationType="slide"
-      transparent
-      presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : undefined}
-      onRequestClose={onClose}
-    >
-      <Pressable style={styles.backdrop} onPress={onClose}>
-        <Pressable style={styles.sheet} onPress={(e) => e.stopPropagation()}>
-          <SafeAreaView edges={['bottom']}>
-            <Pressable style={styles.closeBtn} onPress={onClose} hitSlop={8}>
-              <Text style={styles.closeIcon}>✕</Text>
-            </Pressable>
-
-            {exercise.video ? (
-              <ExerciseVideo url={exercise.video} autoPlay />
-            ) : (
-              <View style={styles.media}>
-                <ExerciseMedia exercise={exercise} variant="player" />
-              </View>
-            )}
-
-            <View style={styles.info}>
-              <Text style={[styles.tag, isLeg && styles.tagLeg]}>{tag}</Text>
-              <Text style={styles.name}>{NAME_EN[exercise.id]}</Text>
-              <Text style={styles.desc}>{exercise.desc}</Text>
-            </View>
-          </SafeAreaView>
-        </Pressable>
+    <Sheet onClose={onClose} noPadding>
+      <Pressable style={styles.closeBtn} onPress={onClose} hitSlop={8}>
+        <Text style={styles.closeIcon}>✕</Text>
       </Pressable>
-    </Modal>
+
+      {exercise.video ? (
+        <ExerciseVideo url={exercise.video} autoPlay />
+      ) : (
+        <View style={styles.media}>
+          <ExerciseMedia exercise={exercise} variant="player" />
+        </View>
+      )}
+
+      <View style={styles.info}>
+        <Text style={[styles.tag, isLeg && styles.tagLeg]}>{tag}</Text>
+        <Text style={styles.name}>{NAME_EN[exercise.id]}</Text>
+        <Text style={styles.desc}>{exercise.desc}</Text>
+      </View>
+    </Sheet>
   );
 }
 
 const styles = StyleSheet.create({
-  backdrop: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.65)',
-    justifyContent: 'flex-end',
-  },
-  sheet: {
-    backgroundColor: COLORS.surf,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    overflow: 'hidden',
-  },
   closeBtn: {
     position: 'absolute',
     top: 14,

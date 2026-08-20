@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
@@ -98,69 +100,73 @@ export default function App() {
   if (!fontsLoaded) return null;
 
   return (
-    <SafeAreaProvider>
-      <View style={styles.root}>
-        {view === 'home' && (
-          <HomeScreen
-            session={session}
-            routeName={routeName}
-            ready={ready}
-            onRegen={regen}
-            onStart={handleStart}
-            focus={focus}
-            duration={duration}
-            onFocusChange={setFocus}
-            onDurationChange={setDuration}
-            streak={streak}
-            onOpenHistory={() => setShowHistory(true)}
-            onOpenProfile={() => setShowProfile(true)}
-            difficulty={difficulty}
-            onDifficultyChange={setDifficulty}
-            onStartLowerSeries={handleStartLowerSeries}
-          />
-        )}
-        {view === 'player' && activeSession && (
-          <PlayerScreen
-            session={activeSession}
-            onQuit={handleQuit}
-            onDone={handleDone}
-          />
-        )}
-        {view === 'done' && (
-          <DoneScreen
-            totalDur={doneDuration}
-            session={activeSession}
-            records={records}
-            streak={streak}
-            bestStreak={bestStreak}
-            totalSessions={totalSessions}
-            onBack={handleBack}
-          />
-        )}
-        {showHistory && (
-          <HistoryModal
-            records={records}
-            streak={streak}
-            bestStreak={bestStreak}
-            totalSessions={totalSessions}
-            totalMinutes={totalMinutes}
-            onClose={() => setShowHistory(false)}
-          />
-        )}
-        {showProfile && prefs && (
-          <ProfileModal
-            prefs={prefs}
-            permission={permission}
-            streak={streak}
-            totalSessions={totalSessions}
-            onUpdate={updatePrefs}
-            onRequestPermission={requestPermission}
-            onClose={() => setShowProfile(false)}
-          />
-        )}
-        <StatusBar style="light" />
-      </View>
-    </SafeAreaProvider>
+    <GestureHandlerRootView style={styles.root}>
+      <SafeAreaProvider>
+        <BottomSheetModalProvider>
+          <View style={styles.root}>
+            {view === 'home' && (
+              <HomeScreen
+                session={session}
+                routeName={routeName}
+                ready={ready}
+                onRegen={regen}
+                onStart={handleStart}
+                focus={focus}
+                duration={duration}
+                onFocusChange={setFocus}
+                onDurationChange={setDuration}
+                streak={streak}
+                onOpenHistory={() => setShowHistory(true)}
+                onOpenProfile={() => setShowProfile(true)}
+                difficulty={difficulty}
+                onDifficultyChange={setDifficulty}
+                onStartLowerSeries={handleStartLowerSeries}
+              />
+            )}
+            {view === 'player' && activeSession && (
+              <PlayerScreen
+                session={activeSession}
+                onQuit={handleQuit}
+                onDone={handleDone}
+              />
+            )}
+            {view === 'done' && (
+              <DoneScreen
+                totalDur={doneDuration}
+                session={activeSession}
+                records={records}
+                streak={streak}
+                bestStreak={bestStreak}
+                totalSessions={totalSessions}
+                onBack={handleBack}
+              />
+            )}
+            {showHistory && (
+              <HistoryModal
+                records={records}
+                streak={streak}
+                bestStreak={bestStreak}
+                totalSessions={totalSessions}
+                totalMinutes={totalMinutes}
+                onClose={() => setShowHistory(false)}
+              />
+            )}
+            {showProfile && prefs && (
+              <ProfileModal
+                prefs={prefs}
+                permission={permission}
+                streak={streak}
+                totalSessions={totalSessions}
+                onUpdate={updatePrefs}
+                onRequestPermission={requestPermission}
+                onClose={() => setShowProfile(false)}
+              />
+            )}
+            <StatusBar style="light" />
+          </View>
+        </BottomSheetModalProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }
 

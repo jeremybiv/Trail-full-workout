@@ -4,7 +4,7 @@ Native rewrite of the "Renfo Trail" PWA (`../src`), built with Expo + React Nati
 See `/root/.claude/plans/quel-est-le-plan-prancy-cray.md` in the original session, or the repo's
 `git log` on this branch, for the full rewrite plan and phase breakdown.
 
-## Status: Phase 0–5 (scaffold, core logic, all 4 screens, History/Profile modals, notifications)
+## Status: Phase 0–6 (scaffold, core logic, all 4 screens, notifications, bottom-sheet modals)
 
 - Project scaffold (Expo SDK 57, TypeScript)
 - Core logic ported from `../src/lib`, `../src/data`, `../src/animations` (session generation,
@@ -43,14 +43,28 @@ See `/root/.claude/plans/quel-est-le-plan-prancy-cray.md` in the original sessio
   real `Switch` + `@react-native-community/datetimepicker` time picker, permission-request flow
   included.
 
+- `Sheet.tsx` added: a shared wrapper around `@gorhom/bottom-sheet`'s `BottomSheetModal`
+  (drag handle, backdrop, tap-outside/drag-down to dismiss, theme colors) that
+  `HistoryModal.tsx`, `ProfileModal.tsx` and `ExerciseDetailModal.tsx` are now built on, replacing
+  the plain RN `<Modal>` + `Pressable` backdrop from earlier phases with a real native-feeling
+  sheet. Needed `react-native-reanimated` (v4 — note its new split-out `react-native-worklets`
+  peer dependency, a separate package as of v4) and `react-native-gesture-handler`
+  (`GestureHandlerRootView` wraps the app root in `App.tsx`; `import 'react-native-gesture-handler'`
+  is the very first line of `index.ts`, as required). `HistoryModal` uses fixed snap points
+  (`['55%', '90%']`) with a `BottomSheetScrollView` for its list; `ProfileModal`/`ExerciseDetailModal`
+  use dynamic sizing.
+- `ExercisePhoto.tsx` tuned: `cachePolicy` bumped to `memory-disk` (the same photo URL is reused
+  between the Home screen's small card and the bigger detail-modal/player views — keeping decoded
+  bitmaps in memory avoids a re-decode/flicker switching between them) plus a `transition={150}`
+  fade-in on load.
+
 The full loop (home → player → done → home, with streak/history persisted, exercise videos
-playing, History/Profile reachable, and a working daily reminder) is testable end-to-end on a
-real device now — this is feature-complete relative to the web app except for its "goal-aware"
-push logic (see above).
+playing, History/Profile reachable via real bottom sheets, and a working daily reminder) is
+testable end-to-end on a real device now — this is feature-complete relative to the web app
+except for its "goal-aware" push logic (see above).
 
 ## Not yet built (later phases)
 
-- Media/asset polish, bottom-sheet modals (Phase 6)
 - EAS build + store submission (Phase 7 — `eas.json` scaffolded, see below)
 
 ## Note on the Cloudflare Worker (`../worker`)

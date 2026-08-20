@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Modal, Platform, Pressable, StyleSheet, Switch, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Platform, Pressable, StyleSheet, Switch, Text, View } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { Sheet } from './Sheet';
 import type { ProfilePrefs } from '../hooks/useProfile';
 import type { NotifPermission } from '../hooks/useNotifications';
 import { COLORS, FONTS, RADIUS } from '../theme/tokens';
@@ -43,145 +43,101 @@ export function ProfileModal({ prefs, permission, streak, totalSessions, onUpdat
   }
 
   return (
-    <Modal
-      visible
-      animationType="slide"
-      transparent
-      presentationStyle={Platform.OS === 'ios' ? 'pageSheet' : undefined}
-      onRequestClose={onClose}
-    >
-      <Pressable style={styles.backdrop} onPress={onClose}>
-        <Pressable style={styles.sheet} onPress={(e) => e.stopPropagation()}>
-          <SafeAreaView edges={['bottom']}>
-            <Pressable style={styles.closeBtn} onPress={onClose} hitSlop={8}>
-              <Text style={styles.closeIcon}>✕</Text>
+    <Sheet onClose={onClose}>
+      <Text style={styles.title}>Mon profil</Text>
+
+      <View style={styles.statsGrid}>
+        <View style={styles.statBox}>
+          <Text style={styles.statVal}>🔥 {streak}</Text>
+          <Text style={styles.statLbl}>Streak</Text>
+        </View>
+        <View style={styles.statBox}>
+          <Text style={styles.statVal}>{totalSessions}</Text>
+          <Text style={styles.statLbl}>Séances</Text>
+        </View>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.label}>Objectif par semaine</Text>
+        <View style={styles.daysRow}>
+          {DAYS_OPTIONS.map((d) => (
+            <Pressable
+              key={d}
+              onPress={() => onUpdate({ workoutsPerWeek: d })}
+              style={[styles.dayBtn, prefs.workoutsPerWeek === d && styles.dayBtnActive]}
+            >
+              <Text style={[styles.dayBtnText, prefs.workoutsPerWeek === d && styles.dayBtnTextActive]}>
+                {d}
+              </Text>
             </Pressable>
-            <Text style={styles.title}>Mon profil</Text>
+          ))}
+        </View>
+        <Text style={styles.hint}>{prefs.workoutsPerWeek}x / semaine</Text>
+      </View>
 
-            <View style={styles.statsGrid}>
-              <View style={styles.statBox}>
-                <Text style={styles.statVal}>🔥 {streak}</Text>
-                <Text style={styles.statLbl}>Streak</Text>
-              </View>
-              <View style={styles.statBox}>
-                <Text style={styles.statVal}>{totalSessions}</Text>
-                <Text style={styles.statLbl}>Séances</Text>
-              </View>
+      <View style={styles.section}>
+        <Text style={styles.label}>Rappel d'entraînement</Text>
+
+        {notifDenied ? (
+          <Text style={styles.hintDenied}>
+            Notifications bloquées — active-les dans les réglages de ton téléphone pour cette app.
+          </Text>
+        ) : (
+          <>
+            <View style={styles.notifRow}>
+              <Text style={styles.notifLabel}>{notifOn ? 'Activé' : 'Désactivé'}</Text>
+              <Switch
+                value={notifOn}
+                onValueChange={handleToggleNotif}
+                trackColor={{ false: COLORS.surf2, true: COLORS.blaze }}
+                thumbColor="#fff"
+              />
             </View>
 
-            <View style={styles.section}>
-              <Text style={styles.label}>Objectif par semaine</Text>
-              <View style={styles.daysRow}>
-                {DAYS_OPTIONS.map((d) => (
-                  <Pressable
-                    key={d}
-                    onPress={() => onUpdate({ workoutsPerWeek: d })}
-                    style={[styles.dayBtn, prefs.workoutsPerWeek === d && styles.dayBtnActive]}
-                  >
-                    <Text style={[styles.dayBtnText, prefs.workoutsPerWeek === d && styles.dayBtnTextActive]}>
-                      {d}
-                    </Text>
-                  </Pressable>
-                ))}
-              </View>
-              <Text style={styles.hint}>{prefs.workoutsPerWeek}x / semaine</Text>
-            </View>
+            {notifOn && (
+              <Pressable style={styles.timeRow} onPress={() => setShowTimePicker(true)}>
+                <Text style={styles.label2}>Heure du rappel</Text>
+                <View style={styles.timeValue}>
+                  <Text style={styles.timeValueText}>{prefs.reminderTime}</Text>
+                </View>
+              </Pressable>
+            )}
 
-            <View style={styles.section}>
-              <Text style={styles.label}>Rappel d'entraînement</Text>
-
-              {notifDenied ? (
-                <Text style={styles.hintDenied}>
-                  Notifications bloquées — active-les dans les réglages de ton téléphone pour cette app.
-                </Text>
-              ) : (
-                <>
-                  <View style={styles.notifRow}>
-                    <Text style={styles.notifLabel}>{notifOn ? 'Activé' : 'Désactivé'}</Text>
-                    <Switch
-                      value={notifOn}
-                      onValueChange={handleToggleNotif}
-                      trackColor={{ false: COLORS.surf2, true: COLORS.blaze }}
-                      thumbColor="#fff"
-                    />
-                  </View>
-
-                  {notifOn && (
-                    <Pressable style={styles.timeRow} onPress={() => setShowTimePicker(true)}>
-                      <Text style={styles.label2}>Heure du rappel</Text>
-                      <View style={styles.timeValue}>
-                        <Text style={styles.timeValueText}>{prefs.reminderTime}</Text>
-                      </View>
-                    </Pressable>
-                  )}
-
-                  {showTimePicker && (
-                    <DateTimePicker
-                      value={parseTime(prefs.reminderTime)}
-                      mode="time"
-                      is24Hour
-                      display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                      onChange={(event, date) => {
-                        if (Platform.OS === 'android') setShowTimePicker(false);
-                        if (event.type === 'set' && date) {
-                          const hh = String(date.getHours()).padStart(2, '0');
-                          const mm = String(date.getMinutes()).padStart(2, '0');
-                          onUpdate({ reminderTime: `${hh}:${mm}` });
-                        }
-                      }}
-                    />
-                  )}
-                </>
-              )}
-            </View>
-          </SafeAreaView>
-        </Pressable>
-      </Pressable>
-    </Modal>
+            {showTimePicker && (
+              <DateTimePicker
+                value={parseTime(prefs.reminderTime)}
+                mode="time"
+                is24Hour
+                display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                onChange={(event, date) => {
+                  if (Platform.OS === 'android') setShowTimePicker(false);
+                  if (event.type === 'set' && date) {
+                    const hh = String(date.getHours()).padStart(2, '0');
+                    const mm = String(date.getMinutes()).padStart(2, '0');
+                    onUpdate({ reminderTime: `${hh}:${mm}` });
+                  }
+                }}
+              />
+            )}
+          </>
+        )}
+      </View>
+    </Sheet>
   );
 }
 
 const styles = StyleSheet.create({
-  backdrop: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.65)',
-    justifyContent: 'flex-end',
-  },
-  sheet: {
-    backgroundColor: COLORS.surf,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    paddingHorizontal: 20,
-    paddingTop: 24,
-    paddingBottom: 8,
-    gap: 20,
-  },
-  closeBtn: {
-    position: 'absolute',
-    top: 14,
-    right: 16,
-    zIndex: 2,
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: COLORS.surf2,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  closeIcon: {
-    color: COLORS.dim,
-    fontSize: 13,
-  },
   title: {
     fontFamily: FONTS.display,
     fontSize: 29,
     letterSpacing: 0.6,
     color: COLORS.ink,
-    marginBottom: 4,
+    marginBottom: 16,
   },
   statsGrid: {
     flexDirection: 'row',
     gap: 12,
+    marginBottom: 20,
   },
   statBox: {
     flex: 1,
@@ -206,6 +162,7 @@ const styles = StyleSheet.create({
   },
   section: {
     gap: 10,
+    marginBottom: 20,
   },
   label: {
     fontSize: 13,

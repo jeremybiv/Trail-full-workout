@@ -36,12 +36,19 @@ export function ExercisePhoto({ id, paused }: Props) {
 
   return (
     <Animated.View style={styles.wrap}>
-      <Image source={{ uri: exercisePhotoUrl(id, 0) }} style={styles.img} contentFit="cover" cachePolicy="disk" />
+      <Image
+        source={{ uri: exercisePhotoUrl(id, 0) }}
+        style={styles.img}
+        contentFit="cover"
+        cachePolicy="memory-disk"
+        transition={150}
+      />
       <AnimatedImage
         source={{ uri: exercisePhotoUrl(id, 1) }}
         style={[styles.img, { opacity }]}
         contentFit="cover"
-        cachePolicy="disk"
+        cachePolicy="memory-disk"
+        transition={150}
       />
     </Animated.View>
   );
