@@ -1,9 +1,10 @@
 interface Props {
   url: string;
   autoPlay?: boolean;
+  onError?: () => void;
 }
 
-export function ExerciseVideo({ url, autoPlay }: Props) {
+export function ExerciseVideo({ url, autoPlay, onError }: Props) {
   return (
     <video
       src={url}
@@ -12,6 +13,7 @@ export function ExerciseVideo({ url, autoPlay }: Props) {
       loop
       playsInline
       preload="metadata"
+      onError={onError}
       {...(autoPlay ? { autoPlay: true, muted: true } : {})}
     />
   );

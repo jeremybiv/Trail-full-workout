@@ -20,6 +20,7 @@ const RING_CIRC = 2 * Math.PI * RING_R;
 export function PlayerScreen({ session, onQuit, onDone }: Props) {
   const [muted, setMuted] = useState(false);
   const [confirmQuit, setConfirmQuit] = useState(false);
+  const [erroredVideoId, setErroredVideoId] = useState<string | null>(null);
   const wasPlayingRef = useRef(false);
   const timeline = useMemo(() => buildTimeline(session.ids, session.duration), [session.ids, session.duration]);
   const totalRounds = session.duration === 'long' ? 4 : 2;
@@ -124,9 +125,9 @@ export function PlayerScreen({ session, onQuit, onDone }: Props) {
 
   const mediaBlock = (
     <>
-      {step?.type === 'work' && exercise?.video ? (
+      {step?.type === 'work' && exercise?.video && exercise.id !== erroredVideoId ? (
         <div className="player-video-hero">
-          <ExerciseVideo url={exercise.video} autoPlay />
+          <ExerciseVideo url={exercise.video} autoPlay onError={() => setErroredVideoId(exercise.id)} />
         </div>
       ) : (
         <PlayerMedia step={step} nextStep={nextStep} paused={paused} />

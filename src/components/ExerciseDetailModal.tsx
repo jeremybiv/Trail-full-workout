@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { Exercise } from '../data/exercises';
 import { NAME_EN } from '../data/exerciseNamesEn';
 import { ExerciseMedia } from './ExerciseMedia';
@@ -10,6 +11,7 @@ interface Props {
 }
 
 export function ExerciseDetailModal({ exercise, isLeg, onClose }: Props) {
+  const [videoErrored, setVideoErrored] = useState(false);
   const tag = isLeg
     ? 'Jambes — tirage du jour'
     : exercise.hold
@@ -21,9 +23,9 @@ export function ExerciseDetailModal({ exercise, isLeg, onClose }: Props) {
       <div className="modal-sheet ex-detail-sheet" onClick={(e) => e.stopPropagation()}>
         <button className="modal-close" onClick={onClose}>✕</button>
 
-        {exercise.video ? (
+        {exercise.video && !videoErrored ? (
           <div className="ex-detail-video">
-            <ExerciseVideo url={exercise.video} autoPlay />
+            <ExerciseVideo url={exercise.video} autoPlay onError={() => setVideoErrored(true)} />
           </div>
         ) : (
           <div className={`ex-detail-media${isLeg ? ' leg' : ''}`}>
